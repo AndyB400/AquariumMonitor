@@ -1,0 +1,12 @@
+language: csharp
+solution: AquariumAPI.sln
+mono: none
+dotnet: 2.0.3
+install:
+  - nuget restore AquariumAPI.sln
+  - nuget install xunit.runners -Version 2.3.1 -OutputDirectory testrunner
+script:
+  - xbuild /p:Configuration=Release AquariumAPI.sln
+  - mono ./testrunner/xunit.runners.2.3.1/tools/xunit.console.clr4.exe ./AquariumAPI.Tests/bin/Release/AquariumAPI.Tests.dll
+  - mono ./testrunner/xunit.runners.2.3.1/tools/xunit.console.clr4.exe ./BusinessLogic.Tests/bin/Release/BusinessLogic.Tests.dll
+  - mono ./testrunner/xunit.runners.2.3.1/tools/xunit.console.clr4.exe ./Models.Tests/bin/Release/Models.Tests.dll
