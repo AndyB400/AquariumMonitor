@@ -1,0 +1,318 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Operations Version="1.0" xmlns="http://schemas.microsoft.com/sqlserver/dac/Serialization/2012/02">
+  <Operation Name="Rename Refactor" Key="93b35925-04cb-4d34-ad04-45d02a2edbea" ChangeDateTime="01/09/2018 09:10:58">
+    <Property Name="ElementName" Value="[dbo].[Aquariums].[ID]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Aquariums]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Id" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="74d0871d-c596-4f9f-a4d0-72faa0c980f6" ChangeDateTime="01/09/2018 09:11:06">
+    <Property Name="ElementName" Value="[dbo].[MeasurementTypes].[ID]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[MeasurementTypes]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Id" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="40f4bfd4-03f1-4111-9e93-9e145cccfbdf" ChangeDateTime="01/09/2018 09:11:13">
+    <Property Name="ElementName" Value="[dbo].[Units].[ID]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Units]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Id" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="30ccab65-1311-4cd6-8b44-58c525d739d0" ChangeDateTime="01/09/2018 09:11:24">
+    <Property Name="ElementName" Value="[dbo].[Measurements].[ID]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Measurements]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Id" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="69868238-6b9d-4487-847f-dafb17e189a7" ChangeDateTime="01/09/2018 09:11:26">
+    <Property Name="ElementName" Value="[dbo].[Measurements].[MeasurementTypeID]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Measurements]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="MeasurementTypeId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="16625129-970a-4b4e-8257-36825d6bb532" ChangeDateTime="01/09/2018 09:11:29">
+    <Property Name="ElementName" Value="[dbo].[Measurements].[UnitID]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Measurements]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="UnitId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="df2c8022-a6d7-491e-956a-f607045aa259" ChangeDateTime="01/09/2018 09:11:31">
+    <Property Name="ElementName" Value="[dbo].[Measurements].[AquariumID]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Measurements]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="AquariumId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="bc177a36-9201-4464-ba2c-6fab7fcb85a9" ChangeDateTime="01/19/2018 11:17:19">
+    <Property Name="ElementName" Value="[dbo].[PK_Measurements]" />
+    <Property Name="ElementType" Value="SqlPrimaryKeyConstraint" />
+    <Property Name="ParentElementName" Value="[dbo].[Measurements]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[PK_MeasurementPH]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="920d6c56-9afe-4749-bdc4-f2bff0e27049" ChangeDateTime="01/19/2018 11:17:23">
+    <Property Name="ElementName" Value="[dbo].[FK_Measurements_Aquariums]" />
+    <Property Name="ElementType" Value="SqlForeignKeyConstraint" />
+    <Property Name="ParentElementName" Value="[dbo].[Measurements]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[FK_MeasurementPH_Aquariums]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="0ab44241-dffa-4679-a32d-1510892d75d8" ChangeDateTime="01/19/2018 11:17:31">
+    <Property Name="ElementName" Value="[dbo].[FK_Measurements_Units]" />
+    <Property Name="ElementType" Value="SqlForeignKeyConstraint" />
+    <Property Name="ParentElementName" Value="[dbo].[Measurements]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[FK_MeasurementPH_Units]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="64aebf2d-b0d2-4c42-92b1-08b7f0c11ce2" ChangeDateTime="01/19/2018 11:17:35">
+    <Property Name="ElementName" Value="[dbo].[FK_Measurements_Users]" />
+    <Property Name="ElementType" Value="SqlForeignKeyConstraint" />
+    <Property Name="ParentElementName" Value="[dbo].[Measurements]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[FK_MeasurementPH_Users]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="b4892625-9c0a-43cc-8f9e-c0a2b10f6b1e" ChangeDateTime="01/19/2018 11:23:01">
+    <Property Name="ElementName" Value="[dbo].[Measurements]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="ParentElementName" Value="[dbo]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[MeasurementNH4]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="b6c2335b-8607-4ea9-a989-49e10c443d68" ChangeDateTime="01/19/2018 11:23:10">
+    <Property Name="ElementName" Value="[dbo].[FK_MeasurementPH_Aquariums]" />
+    <Property Name="ElementType" Value="SqlForeignKeyConstraint" />
+    <Property Name="ParentElementName" Value="[dbo].[MeasurementNH4]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[FK_MeasurementNH4_Aquariums]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="f543498e-5b48-4cbe-bc48-e361c7bc1b9c" ChangeDateTime="01/19/2018 11:23:16">
+    <Property Name="ElementName" Value="[dbo].[FK_MeasurementPH_Units]" />
+    <Property Name="ElementType" Value="SqlForeignKeyConstraint" />
+    <Property Name="ParentElementName" Value="[dbo].[MeasurementNH4]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[FK_MeasurementNH4_Units]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="a7797f66-d917-411c-8d71-fab71fa61ff5" ChangeDateTime="01/19/2018 11:23:21">
+    <Property Name="ElementName" Value="[dbo].[FK_MeasurementPH_Users]" />
+    <Property Name="ElementType" Value="SqlForeignKeyConstraint" />
+    <Property Name="ParentElementName" Value="[dbo].[MeasurementNH4]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[FK_MeasurementNH4_Users]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="0189cd2f-a184-470a-a20b-aceb5f33360b" ChangeDateTime="01/19/2018 11:23:48">
+    <Property Name="ElementName" Value="[dbo].[PK_MeasurementPH]" />
+    <Property Name="ElementType" Value="SqlPrimaryKeyConstraint" />
+    <Property Name="ParentElementName" Value="[dbo].[MeasurementNH4]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[PK_MeasurementNH4]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="3484cbcd-bcfa-4d5a-a603-1327df939b8e" ChangeDateTime="01/19/2018 11:24:14">
+    <Property Name="ElementName" Value="[dbo].[MeasurementNH4]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="ParentElementName" Value="[dbo]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[MeasurementNO2]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="b9738ebd-70a8-481d-9d8b-86313f923542" ChangeDateTime="01/19/2018 11:24:22">
+    <Property Name="ElementName" Value="[dbo].[PK_MeasurementNH4]" />
+    <Property Name="ElementType" Value="SqlPrimaryKeyConstraint" />
+    <Property Name="ParentElementName" Value="[dbo].[MeasurementNO2]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[PK_MeasurementNO2]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="9a61c14d-e477-4415-ae51-86061f096da7" ChangeDateTime="01/19/2018 11:24:28">
+    <Property Name="ElementName" Value="[dbo].[FK_MeasurementNH4_Aquariums]" />
+    <Property Name="ElementType" Value="SqlForeignKeyConstraint" />
+    <Property Name="ParentElementName" Value="[dbo].[MeasurementNO2]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[FK_MeasurementNO2_Aquariums]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="b8224ae9-a903-4a96-be9f-5c3e9d5b292d" ChangeDateTime="01/19/2018 11:24:32">
+    <Property Name="ElementName" Value="[dbo].[FK_MeasurementNH4_Units]" />
+    <Property Name="ElementType" Value="SqlForeignKeyConstraint" />
+    <Property Name="ParentElementName" Value="[dbo].[MeasurementNO2]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[FK_MeasurementNO2_Units]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="38a4cc5e-3586-408f-907d-121975fcf692" ChangeDateTime="01/19/2018 11:24:36">
+    <Property Name="ElementName" Value="[dbo].[FK_MeasurementNH4_Users]" />
+    <Property Name="ElementType" Value="SqlForeignKeyConstraint" />
+    <Property Name="ParentElementName" Value="[dbo].[MeasurementNO2]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[FK_MeasurementNO2_Users]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="15e524ca-58f4-45d0-a1b7-2a919e97d41b" ChangeDateTime="01/19/2018 11:25:19">
+    <Property Name="ElementName" Value="[dbo].[MeasurementNH4]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="ParentElementName" Value="[dbo]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[MeasurementTemp]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="67c3e7d7-81d8-4b72-b283-cc29ee69a5cd" ChangeDateTime="01/19/2018 11:25:24">
+    <Property Name="ElementName" Value="[dbo].[PK_MeasurementNH4]" />
+    <Property Name="ElementType" Value="SqlPrimaryKeyConstraint" />
+    <Property Name="ParentElementName" Value="[dbo].[MeasurementTemp]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[PK_MeasurementTemp]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="3f8a3f8f-db9c-43a7-81bb-7425cdd11bf4" ChangeDateTime="01/19/2018 11:25:28">
+    <Property Name="ElementName" Value="[dbo].[FK_MeasurementNH4_Aquariums]" />
+    <Property Name="ElementType" Value="SqlForeignKeyConstraint" />
+    <Property Name="ParentElementName" Value="[dbo].[MeasurementTemp]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[FK_MeasurementTemp_Aquariums]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="73e53515-1198-4217-bad2-90c37b9ef75c" ChangeDateTime="01/19/2018 11:25:37">
+    <Property Name="ElementName" Value="[dbo].[FK_MeasurementNH4_Units]" />
+    <Property Name="ElementType" Value="SqlForeignKeyConstraint" />
+    <Property Name="ParentElementName" Value="[dbo].[MeasurementTemp]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[FK_MeasurementTemp_Units]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="78fd7352-8870-42a7-9c19-bcbf977bfa9d" ChangeDateTime="01/19/2018 11:25:44">
+    <Property Name="ElementName" Value="[dbo].[FK_MeasurementNH4_Users]" />
+    <Property Name="ElementType" Value="SqlForeignKeyConstraint" />
+    <Property Name="ParentElementName" Value="[dbo].[MeasurementTemp]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[FK_MeasurementTemp_Users]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="462b6aa1-906a-4244-a3d9-4c8d6dc8326c" ChangeDateTime="01/19/2018 11:42:24">
+    <Property Name="ElementName" Value="[dbo].[Measurements]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="ParentElementName" Value="[dbo]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[MeasurementPH]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="96a04bc6-7c67-458c-8913-c1bd9026b001" ChangeDateTime="01/19/2018 12:43:51">
+    <Property Name="ElementName" Value="[dbo].[AquariumType]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="ParentElementName" Value="[dbo]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[AquariumTypes]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="2fd38335-750b-4555-b206-4246b9e40208" ChangeDateTime="01/19/2018 12:52:07">
+    <Property Name="ElementName" Value="[dbo].[Aquariums].[AquariumType]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Aquariums]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="AquariumTypeId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="66275941-93ae-4cc3-8549-30c5c37509f5" ChangeDateTime="01/19/2018 12:54:45">
+    <Property Name="ElementName" Value="[dbo].[Aquariums].[VolumeUnits]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Aquariums]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="VolumeUnitId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="c3a5977c-621e-4561-8942-9a01eb432b94" ChangeDateTime="01/19/2018 12:57:00">
+    <Property Name="ElementName" Value="[dbo].[Aquariums].[DimesionUnits]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Aquariums]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="DimesionUnitId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="3b84c78e-addc-4dc5-baa2-4864681f953d" ChangeDateTime="01/19/2018 12:57:44">
+    <Property Name="ElementName" Value="[dbo].[Units].[Volume]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Units]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="VolumeUnit" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="e51f25ad-45f5-4c80-aed2-a3c02bfcff20" ChangeDateTime="01/19/2018 14:39:59">
+    <Property Name="ElementName" Value="[dbo].[UserPasswords].[Password]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[UserPasswords]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="PasswordHash" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="c4a583e9-4c8c-491f-a310-72445da410c3" ChangeDateTime="01/19/2018 14:40:01">
+    <Property Name="ElementName" Value="[dbo].[UserPasswords].[Hash]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[UserPasswords]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Salt" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="b0ff6953-9bb7-4cb6-9f69-d5cab100b66b" ChangeDateTime="01/19/2018 14:44:49">
+    <Property Name="ElementName" Value="[dbo].[Users].[Disabled]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Users]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Deleted" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="dbe0a14f-ab21-40ad-af28-d59c6b1baacf" ChangeDateTime="01/24/2018 09:28:58">
+    <Property Name="ElementName" Value="[dbo].[WaterChange]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="ParentElementName" Value="[dbo]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[WaterChanges]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="f13e952d-4931-4059-8163-a823d79b1195" ChangeDateTime="01/25/2018 10:09:24">
+    <Property Name="ElementName" Value="[dbo].[MeasurementNH4]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="ParentElementName" Value="[dbo]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[Measurement]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="f814077f-7780-4302-a047-493e4afb8beb" ChangeDateTime="01/25/2018 10:11:12">
+    <Property Name="ElementName" Value="[dbo].[Measurement]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="ParentElementName" Value="[dbo]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[Measurements]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="e4201edc-e6f2-48ff-9eaf-71cfec35c0db" ChangeDateTime="01/26/2018 21:35:42">
+    <Property Name="ElementName" Value="[dbo].[WaterChanges].[DateChanged]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[WaterChanges]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Changed" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="d269383e-6c70-4447-b7d5-797f03c8c546" ChangeDateTime="01/30/2018 13:43:26">
+    <Property Name="ElementName" Value="[dbo].[Users].[Password]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Users]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="PasswordHashAndSalt" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="4e2af75d-104d-4fe2-bf77-85d4b789ef78" ChangeDateTime="01/31/2018 14:09:57">
+    <Property Name="ElementName" Value="[dbo].[UserRoles].[Id]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[UserRoles]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="UserId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="fe899edc-d28e-4934-98c1-5020d8e99d68" ChangeDateTime="01/31/2018 14:32:16">
+    <Property Name="ElementName" Value="[dbo].[Roles]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="ParentElementName" Value="[dbo]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[Claims]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="70407bf2-6458-4083-9ac0-b2aee1694278" ChangeDateTime="01/31/2018 14:32:37">
+    <Property Name="ElementName" Value="[dbo].[UserRoles]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="ParentElementName" Value="[dbo]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[UserClaims]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="03c6f861-d834-41ff-8382-7a10d35fcd21" ChangeDateTime="01/31/2018 14:32:51">
+    <Property Name="ElementName" Value="[dbo].[UserClaims].[RoleId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[UserClaims]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="ClaimId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="1e22ce16-4150-472c-a9c3-1dfe7a590487" ChangeDateTime="02/02/2018 15:34:58">
+    <Property Name="ElementName" Value="[dbo].[MeasurementNH4]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="ParentElementName" Value="[dbo]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[Measurements]" />
+  </Operation>
+</Operations>

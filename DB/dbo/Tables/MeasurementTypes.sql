@@ -1,0 +1,5 @@
+﻿CREATE TABLE [dbo].[MeasurementTypes]
+(
+	[Id] TINYINT NOT NULL PRIMARY KEY IDENTITY, 
+    [Name] VARCHAR(100) NOT NULL
+)
