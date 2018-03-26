@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2036
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AquariumAPI", "AquariumAPI\AquariumAPI.csproj", "{DD0C0A16-4A5E-4160-B88E-E463FDA27777}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AquariumAPI2", "AquariumAPI\AquariumAPI2.csproj", "{DD0C0A16-4A5E-4160-B88E-E463FDA27777}"
 EndProject
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "DB", "DB\DB.sqlproj", "{316E5ACF-1DFA-4B75-9766-8891D9D9B537}"
 EndProject
@@ -21,7 +21,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BusinessLogic", "BusinessLo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Models", "Models\Models.csproj", "{DC03D052-29A7-418E-B914-A8A2B23F6D2A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Models.Tests", "Models.Tests\Models.Tests.csproj", "{2157027D-75F8-42AD-9DD3-B35725021FD9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Models.Tests", "Models.Tests\Models.Tests.csproj", "{2157027D-75F8-42AD-9DD3-B35725021FD9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AquariumAPI", "WebApplication1\AquariumAPI.csproj", "{BF43BFAE-75B8-4AF6-BA7D-8DFB747FE425}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -69,6 +71,10 @@ Global
 		{2157027D-75F8-42AD-9DD3-B35725021FD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2157027D-75F8-42AD-9DD3-B35725021FD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2157027D-75F8-42AD-9DD3-B35725021FD9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF43BFAE-75B8-4AF6-BA7D-8DFB747FE425}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF43BFAE-75B8-4AF6-BA7D-8DFB747FE425}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF43BFAE-75B8-4AF6-BA7D-8DFB747FE425}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF43BFAE-75B8-4AF6-BA7D-8DFB747FE425}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
