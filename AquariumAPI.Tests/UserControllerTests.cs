@@ -1,7 +1,7 @@
 ﻿using AquariumAPI.Controllers;
 using System;
 using Microsoft.Extensions.Configuration;
-using Serilog;
+using Microsoft.Extensions.Logging;
 using Xunit;
 using Moq;
 using AquariumMonitor.DAL.Interfaces;
@@ -22,7 +22,7 @@ namespace AquariumAPI.Tests
     {
         private UserController controller;
         private Mock<IConfiguration> mockConfiguration;
-        private Mock<ILogger> mockLogger;
+        private Mock<ILogger<UserController>> mockLogger;
         private Mock<IUserRepository> mockUserRepository;
         private Mock<IPasswordManager> mockPasswordManager;
         private Mock<IPasswordRepository> mockPasswordRepository;
@@ -34,7 +34,7 @@ namespace AquariumAPI.Tests
         {
             // Create mocks
             mockConfiguration = new Mock<IConfiguration>();
-            mockLogger = new Mock<ILogger>();
+            mockLogger = new Mock<ILogger<UserController>>();
             mockUserRepository = new Mock<IUserRepository>();
             mockPasswordManager = new Mock<IPasswordManager>();
             mockPasswordRepository = new Mock<IPasswordRepository>();

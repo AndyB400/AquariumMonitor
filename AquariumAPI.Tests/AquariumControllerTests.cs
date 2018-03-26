@@ -6,7 +6,7 @@ using AquariumMonitor.Models;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Serilog;
+using Microsoft.Extensions.Logging;
 using Moq;
 using System;
 using System.Security.Claims;
@@ -19,7 +19,7 @@ namespace AquariumAPI.Tests
     public class AquariumControllerTests
     {
         private AquariumController controller;
-        private Mock<ILogger> mockLogger;
+        private Mock<ILogger<AquariumController>> mockLogger;
         private Mock<IAquariumRepository> mockAquariumRepository;
         private Mock<IUnitManager> mockUnitManager;
         private Mock<IAquariumTypeManager> mockAquariumTypeManager;
@@ -29,7 +29,7 @@ namespace AquariumAPI.Tests
         public AquariumControllerTests()
         {
             // Create mocks
-            mockLogger = new Mock<ILogger>();
+            mockLogger = new Mock<ILogger<AquariumController>>();
             mockAquariumRepository = new Mock<IAquariumRepository>();
             mockUnitManager = new Mock<IUnitManager>();
             mockAquariumTypeManager = new Mock<IAquariumTypeManager>();
@@ -237,7 +237,7 @@ namespace AquariumAPI.Tests
             var existingAquarium = new Aquarium();
             mockAquariumRepository.Setup(ur => ur.Get(1, 1)).ReturnsAsync(existingAquarium).Verifiable();
             mockAquariumRepository.Setup(ur => ur.Update(It.IsAny<Aquarium>())).Throws(new Exception()).Verifiable();
-            mockLogger.Setup(l => l.Error(It.IsAny<Exception>(), It.IsAny<string>())).Verifiable();
+            mockLogger.Setup(l => l.LogError(It.IsAny<Exception>(), It.IsAny<string>())).Verifiable();
 
             SetupController();
 
@@ -255,7 +255,7 @@ namespace AquariumAPI.Tests
             mockAquariumRepository.Verify(r => r.Update(It.IsAny<Aquarium>()), Times.Once);
 
             mockMapper.Verify(m => m.Map(It.IsAny<AquariumModel>(), It.IsAny<Aquarium>()), Times.Once);
-            mockLogger.Verify(l => l.Error(It.IsAny<Exception>(), It.IsAny<string>()), Times.Once);
+            mockLogger.Verify(l => l.LogError(It.IsAny<Exception>(), It.IsAny<string>()), Times.Once);
         }
 
         [Fact]
@@ -311,7 +311,7 @@ namespace AquariumAPI.Tests
             var existingAquarium = new Aquarium();
             mockAquariumRepository.Setup(r => r.Get(1, 1)).ReturnsAsync(existingAquarium).Verifiable();
             mockAquariumRepository.Setup(r => r.Delete(1)).Throws(new Exception()).Verifiable();
-            mockLogger.Setup(l => l.Error(It.IsAny<Exception>(), It.IsAny<string>())).Verifiable();
+            mockLogger.Setup(l => l.LogError(It.IsAny<Exception>(), It.IsAny<string>())).Verifiable();
             SetupController();
 
             //Act
@@ -325,7 +325,7 @@ namespace AquariumAPI.Tests
 
             mockAquariumRepository.Verify(r => r.Get(1, 1), Times.Once);
             mockAquariumRepository.Verify(r => r.Delete(1), Times.Once);
-            mockLogger.Verify(l => l.Error(It.IsAny<Exception>(), "An error occured whilst trying to delete Aquarium. AquariumId:1"), Times.Once);
+            mockLogger.Verify(l => l.LogError(It.IsAny<Exception>(), "An error occured whilst trying to delete Aquarium. AquariumId:1"), Times.Once);
         }
     }
 }

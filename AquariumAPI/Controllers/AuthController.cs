@@ -4,7 +4,7 @@ using AquariumMonitor.Models.APIModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using Serilog;
+using Microsoft.Extensions.Logging;
 using AquariumAPI.Filters;
 using AquariumMonitor.DAL.Interfaces;
 using System.Threading.Tasks;
@@ -19,13 +19,13 @@ namespace AquariumAPI.Controllers
     public class AuthController : Controller
     {
         private readonly IConfiguration _configuration;
-        private readonly ILogger _logger;
+        private readonly ILogger<AuthController> _logger;
         private readonly IUserRepository _userRepository;
         private readonly IPasswordManager _passwordManager;
         private readonly IAuthManager _authManager;
 
         public AuthController(IConfiguration configuration,
-            ILogger logger,
+            ILogger<AuthController> logger,
             IUserRepository userRepository,
             IPasswordManager passwordManager, 
             IAuthManager authManager)
@@ -68,7 +68,7 @@ namespace AquariumAPI.Controllers
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, $"Exception thrown while creating JWT: {ex}");
+                _logger.LogError(ex, $"Exception thrown while creating JWT: {ex}");
             }
             return BadRequest("Failed to create token");
         }

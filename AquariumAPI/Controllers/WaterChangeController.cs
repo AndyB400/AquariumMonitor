@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using AquariumMonitor.DAL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Serilog;
+using Microsoft.Extensions.Logging;
 using AquariumMonitor.APIModels;
 using AquariumMonitor.Models;
 using AquariumAPI.Filters;
@@ -24,7 +24,7 @@ namespace AquariumAPI.Controllers
 
         public WaterChangeController(IWaterChangeRepository repository, 
             IAquariumRepository aquariumRepository,
-            ILogger logger, 
+            ILogger<WaterChangeController> logger, 
             IMapper mapper) : base(logger, mapper)
         {
             _repository = repository;
@@ -78,7 +78,7 @@ namespace AquariumAPI.Controllers
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, "An error occured whilst trying to create waterChange.");
+                _logger.LogError(ex, "An error occured whilst trying to create waterChange.");
             }
             return BadRequest("Could not create waterChange");
         }
@@ -102,7 +102,7 @@ namespace AquariumAPI.Controllers
             }
             catch(Exception ex)
             {
-                _logger.Error(ex, "An error occured whilst trying to update WaterChange.");
+                _logger.LogError(ex, "An error occured whilst trying to update WaterChange.");
             }
             return BadRequest("Could not update WaterChange");
         }
@@ -125,7 +125,7 @@ namespace AquariumAPI.Controllers
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, "An error occured whilst trying to delete WaterChange.");
+                _logger.LogError(ex, "An error occured whilst trying to delete WaterChange.");
             }
             return BadRequest("Could not delete WaterChange");
         }

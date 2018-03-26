@@ -5,7 +5,7 @@ using Dapper;
 using AquariumMonitor.DAL.Interfaces;
 using AquariumMonitor.Models;
 using System.Threading.Tasks;
-using Serilog;
+using Microsoft.Extensions.Logging;
 
 namespace AquariumMonitor.DAL
 {
@@ -39,7 +39,7 @@ namespace AquariumMonitor.DAL
         private string ExistsByUsernameQuery = "SELECT 'Exists' FROM Aquariums a JOIN Users u ON a.UserId = u.Id WHERE u.Username = @username AND a.Id = @id";
 
         public AquariumRepository(IConnectionFactory connectionFactory,
-            ILogger logger) : base (connectionFactory, logger)
+            ILogger<AquariumRepository> logger) : base (connectionFactory, logger)
         {
         }
 

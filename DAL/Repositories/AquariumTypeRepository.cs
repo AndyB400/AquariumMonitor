@@ -3,7 +3,7 @@ using AquariumMonitor.DAL.Interfaces;
 using AquariumMonitor.Models;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using Serilog;
+using Microsoft.Extensions.Logging;
 
 namespace AquariumMonitor.DAL
 {
@@ -14,7 +14,7 @@ namespace AquariumMonitor.DAL
         private const string GetQuery = @"SELECT Id, [Name] FROM AquariumTypes;";
 
         public AquariumTypeRepository(IConnectionFactory connectionFactory,
-            ILogger logger) : base (connectionFactory, logger)
+            ILogger<AquariumTypeRepository> logger) : base (connectionFactory, logger)
         {
         }
 

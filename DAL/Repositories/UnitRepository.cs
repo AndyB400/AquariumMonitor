@@ -2,7 +2,7 @@
 using AquariumMonitor.DAL.Interfaces;
 using AquariumMonitor.Models;
 using System.Threading.Tasks;
-using Serilog;
+using Microsoft.Extensions.Logging;
 
 namespace AquariumMonitor.DAL
 {
@@ -11,7 +11,7 @@ namespace AquariumMonitor.DAL
         private const string GetByNameQuery = @"SELECT Id, Name FROM Units WHERE Name = @name";
 
         public UnitRepository(IConnectionFactory connectionFactory,
-            ILogger logger) : base(connectionFactory, logger)
+            ILogger<UnitRepository> logger) : base(connectionFactory, logger)
         {
             
         }

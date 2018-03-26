@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Serilog;
+using Microsoft.Extensions.Logging;
 using Microsoft.Net.Http.Headers;
 
 namespace AquariumAPI.Controllers
@@ -30,7 +30,7 @@ namespace AquariumAPI.Controllers
         private readonly IMeasurementManager _measurementManager;
 
         public MeasurementController(IMeasurementRepository repository, 
-            ILogger logger,  IMapper mapper,
+            ILogger<MeasurementController> logger,  IMapper mapper,
             IAquariumRepository aquariumRepository, IValidationManager validationManager, 
             IUnitManager unitManager,
             IMeasurementManager measurementManager) : base(logger, mapper)
@@ -102,7 +102,7 @@ namespace AquariumAPI.Controllers
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, "An error occured whilst trying to create Measurement.");
+                _logger.LogError(ex, "An error occured whilst trying to create Measurement.");
             }
             return BadRequest("Could not create Measurement");
         }
@@ -137,7 +137,7 @@ namespace AquariumAPI.Controllers
             }
             catch(Exception ex)
             {
-                _logger.Error(ex, "An error occured whilst trying to update Measurement.");
+                _logger.LogError(ex, "An error occured whilst trying to update Measurement.");
             }
             return BadRequest("Could not update Measurment");
         }
@@ -160,7 +160,7 @@ namespace AquariumAPI.Controllers
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, "An error occured whilst trying to delete Measurement.");
+                _logger.LogError(ex, "An error occured whilst trying to delete Measurement.");
             }
             return BadRequest("Could not delete Measurment");
         }

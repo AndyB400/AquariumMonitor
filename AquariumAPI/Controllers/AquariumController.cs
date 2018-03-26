@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AquariumMonitor.DAL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Serilog;
+using Microsoft.Extensions.Logging;
 using AutoMapper;
 using AquariumMonitor.Models;
 using AquariumMonitor.APIModels;
@@ -13,7 +13,6 @@ using AquariumMonitor.BusinessLogic.Interfaces;
 using Microsoft.Net.Http.Headers;
 using System.Linq;
 using System.Net;
-using Microsoft.AspNetCore.Http;
 
 namespace AquariumAPI.Controllers
 {
@@ -29,7 +28,7 @@ namespace AquariumAPI.Controllers
         private readonly IAquariumTypeManager _aquariumTypeManager;
 
         public AquariumController(IAquariumRepository repository,
-            ILogger logger, 
+            ILogger<AquariumController> logger, 
             IMapper mapper,
             IUnitManager unitManager,
             IAquariumTypeManager aquariumTypeManager) : base(logger, mapper)
@@ -79,9 +78,9 @@ namespace AquariumAPI.Controllers
 
                 await LookupTypeAndUnits(aquarium);
 
-                _logger.Information("Creating new aquarium...");
+                _logger.LogInformation("Creating new aquarium...");
                 await _repository.Add(aquarium);
-                _logger.Information($"New aquarium created. AquariumID:{aquarium.Id}.");
+                _logger.LogInformation($"New aquarium created. AquariumID:{aquarium.Id}.");
 
                 AddETag(aquarium.RowVersion);
 
@@ -90,7 +89,7 @@ namespace AquariumAPI.Controllers
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, "An error occured whilst trying to create Aquarium.");
+                _logger.LogError(ex, "An error occured whilst trying to create Aquarium.");
             }
             return BadRequest("Could not create Aquarium");
         }
@@ -117,7 +116,7 @@ namespace AquariumAPI.Controllers
 
                 await LookupTypeAndUnits(aquarium);
 
-                _logger.Information($"Updating aquarium. AquariumID:{aquariumId}");
+                _logger.LogInformation($"Updating aquarium. AquariumID:{aquariumId}");
                 await _repository.Update(aquarium);
 
                 AddETag(aquarium.RowVersion);
@@ -126,7 +125,7 @@ namespace AquariumAPI.Controllers
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, "An error occured whilst trying to update Aquarium");
+                _logger.LogError(ex, "An error occured whilst trying to update Aquarium");
             }
             return BadRequest("Could not update Aquarium");
         }
@@ -149,14 +148,14 @@ namespace AquariumAPI.Controllers
                     }
                 }
 
-                _logger.Information($"Deleting Aquarium. AquariumId:{aquariumId}");
+                _logger.LogInformation($"Deleting Aquarium. AquariumId:{aquariumId}");
                 await _repository.Delete(aquariumId);
 
                 return Ok();
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, $"An error occured whilst trying to delete Aquarium. AquariumId:{aquariumId}");
+                _logger.LogError(ex, $"An error occured whilst trying to delete Aquarium. AquariumId:{aquariumId}");
             }
             return BadRequest("Could not delete Aquarium");
         }

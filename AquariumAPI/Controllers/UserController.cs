@@ -3,7 +3,7 @@ using AquariumMonitor.Models.APIModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using Serilog;
+using Microsoft.Extensions.Logging;
 using AquariumMonitor.Models;
 using AquariumAPI.Filters;
 using AquariumMonitor.DAL.Interfaces;
@@ -29,7 +29,7 @@ namespace AquariumAPI.Controllers
         private readonly IHaveIBeenPwnedRestClient _pwnedClient;
 
         public UserController(IConfiguration configuration,
-            ILogger logger,
+            ILogger<UserController> logger,
             IUserRepository repository,
             IPasswordManager passwordManager,
             IPasswordRepository passwordRepository,
@@ -85,9 +85,9 @@ namespace AquariumAPI.Controllers
                     return BadRequest("User already exists");
                 }
 
-                _logger.Information("Creating new user...");
+                _logger.LogInformation("Creating new user...");
                 await _repository.Add(user);
-                _logger.Information($"New user created. UserID:{user.Id}.");
+                _logger.LogInformation($"New user created. UserID:{user.Id}.");
 
                 await AddPassword(user);
 
@@ -98,7 +98,7 @@ namespace AquariumAPI.Controllers
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, "An error occured whilst trying to create User.");
+                _logger.LogError(ex, "An error occured whilst trying to create User.");
             }
             return BadRequest("Could not create User");
         }
@@ -127,7 +127,7 @@ namespace AquariumAPI.Controllers
 
                 _mapper.Map(model, user);
 
-                _logger.Information($"Updating user. UserID:{userId}");
+                _logger.LogInformation($"Updating user. UserID:{userId}");
                 await _repository.Update(user);
 
                 AddETag(user.RowVersion);
@@ -136,7 +136,7 @@ namespace AquariumAPI.Controllers
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, "An error occured whilst trying to update User.");
+                _logger.LogError(ex, "An error occured whilst trying to update User.");
             }
             return BadRequest("Could not update User");
         }
@@ -151,14 +151,14 @@ namespace AquariumAPI.Controllers
                 var user = await _repository.Get(userId);
                 if (user == null) return NotFound();
 
-                _logger.Information($"Deleting user. UserID:{userId}, Username: {User.Identity.Name}");
+                _logger.LogInformation($"Deleting user. UserID:{userId}, Username: {User.Identity.Name}");
                 await _repository.Delete(user.Id);
 
                 return Ok();
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, "An error occured whilst trying to delete User.");
+                _logger.LogError(ex, "An error occured whilst trying to delete User.");
             }
             return BadRequest("Could not delete User");
         }
@@ -178,17 +178,17 @@ namespace AquariumAPI.Controllers
 
                 if (user.Password != oldPassword)
                 {
-                    _logger.Information($"Attempting to update user password. UserID:{userId}. Password Don't match.");
+                    _logger.LogInformation($"Attempting to update user password. UserID:{userId}. Password Don't match.");
                     return BadRequest("Current passwords don't match");
                 }
 
                 if (user.Password == newPassword)
                 {
-                    _logger.Information($"Attempting to update user password. UserID:{userId}. New password is the same as the current.");
+                    _logger.LogInformation($"Attempting to update user password. UserID:{userId}. New password is the same as the current.");
                     return BadRequest("New password is the same as the current");
                 }
 
-                _logger.Information($"Updating user password. UserID:{userId}");
+                _logger.LogInformation($"Updating user password. UserID:{userId}");
 
                 user.Password = newPassword;
                 await AddPassword(user);
@@ -197,7 +197,7 @@ namespace AquariumAPI.Controllers
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, "An error occured whilst trying to change Password.");
+                _logger.LogError(ex, "An error occured whilst trying to change Password.");
             }
             return BadRequest("Could not change Password");
         }

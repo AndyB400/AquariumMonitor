@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Linq;
-using Serilog;
+using Microsoft.Extensions.Logging;
 
 namespace AquariumMonitor.DAL
 {
@@ -36,37 +36,37 @@ namespace AquariumMonitor.DAL
         private string ExistsQuery = "SELECT 'Exists' FROM Users WHERE Id = @id";
 
         public UserRepository(IConnectionFactory connectionFactory,
-            ILogger logger) : base (connectionFactory, logger)
+            ILogger<UserRepository> logger) : base (connectionFactory, logger)
         { 
         }
 
         public async Task Add(User user)
         {
-            _logger.Information($"Adding User. Username:{user.Username}'...");
+            _logger.LogInformation($"Adding User. Username:{user.Username}'...");
 
             using (var connection = _connectionFactory.GetOpenConnection())
             {
                 user.Id = await connection.QueryFirstAsync<int>(InsertQuery, user);
             }
 
-             _logger.Information($"Finished adding User. UserId:'{user.Id}'.");
+             _logger.LogInformation($"Finished adding User. UserId:'{user.Id}'.");
         }
 
         public async Task Delete(int Id)
         {
-            _logger.Information($"Deleting User. UserId:'{Id}'...");
+            _logger.LogInformation($"Deleting User. UserId:'{Id}'...");
 
             using (var connection = _connectionFactory.GetOpenConnection())
             {
                 await connection.ExecuteAsync(DeleteQuery, new { Id });
             }
 
-            _logger.Information($"Finished deleting User. UserId:'{Id}'.");
+            _logger.LogInformation($"Finished deleting User. UserId:'{Id}'.");
         }
 
         public async Task<bool> Exists(int userId)
         {
-            _logger.Information($"Checking User Exists by Id:'{userId}'...");
+            _logger.LogInformation($"Checking User Exists by Id:'{userId}'...");
             string exists;
 
             using (var connection = _connectionFactory.GetOpenConnection())
@@ -74,40 +74,40 @@ namespace AquariumMonitor.DAL
                 exists = await connection.QueryFirstOrDefaultAsync<string>(ExistsQuery, new { userId });
             }
 
-            _logger.Information($"Finished checking User Exists. UserId:'{userId}', Exists:{exists}.");
+            _logger.LogInformation($"Finished checking User Exists. UserId:'{userId}', Exists:{exists}.");
 
             return exists != null ? true : false;
         }
 
         public async Task<User> Get(int Id)
         {
-            _logger.Information($"Getting User by Id:'{Id}'...");
+            _logger.LogInformation($"Getting User by Id:'{Id}'...");
             User user;
 
             using (var connection = _connectionFactory.GetOpenConnection())
             {
                 user = await connection.QueryFirstOrDefaultAsync<User>(GetByIdQuery, new { Id });
             }
-            _logger.Information($"Finished getting User by Id:'{Id}'.");
+            _logger.LogInformation($"Finished getting User by Id:'{Id}'.");
             return user;
         }
 
         public async Task<User> Get(string userName)
         {
-            _logger.Information($"Getting User by username:'{userName}'...");
+            _logger.LogInformation($"Getting User by username:'{userName}'...");
             User user;
 
             using (var connection = _connectionFactory.GetOpenConnection())
             {
                 user = await connection.QueryFirstOrDefaultAsync<User>(GetByUserNameQuery, new { userName });
             }
-            _logger.Information($"Finished getting User by username:'{userName}'.");
+            _logger.LogInformation($"Finished getting User by username:'{userName}'.");
             return user;
         }
 
         public async Task<List<Claim>> GetClaims(int UserId)
         {
-            _logger.Information($"Getting User claims by UserId:'{UserId}'...");
+            _logger.LogInformation($"Getting User claims by UserId:'{UserId}'...");
             List<Claim> claims;
 
             using (var connection = _connectionFactory.GetOpenConnection())
@@ -116,33 +116,33 @@ namespace AquariumMonitor.DAL
 
                 claims = new List<string>(results).Select(c => new Claim(c.ToString(), "True")).ToList();
             }
-            _logger.Information($"Finished getting User claims by UserId:'{UserId}'.");
+            _logger.LogInformation($"Finished getting User claims by UserId:'{UserId}'.");
 
             return claims;
         }
 
         public async Task Update(User user)
         {
-            _logger.Information($"Updating User. UserId:'{user.Id}'...");
+            _logger.LogInformation($"Updating User. UserId:'{user.Id}'...");
 
             using (var connection = _connectionFactory.GetOpenConnection())
             {
                 await connection.ExecuteAsync(UpdateQuery, user);
             }
 
-            _logger.Information($"Finshed updating User. UserId:'{user.Id}'.");
+            _logger.LogInformation($"Finshed updating User. UserId:'{user.Id}'.");
         }
 
         public async Task UpdateLastLogin(int id)
         {
-            _logger.Information($"Updating User Last Login. UserId:'{id}'...");
+            _logger.LogInformation($"Updating User Last Login. UserId:'{id}'...");
 
             using (var connection = _connectionFactory.GetOpenConnection())
             {
                 await connection.ExecuteAsync(UpdateLastLoginQuery, new { id, lastLogin = DateTimeOffset.Now });
             }
 
-            _logger.Information($"Finished updating User Last Login. UserId:'{id}'.");
+            _logger.LogInformation($"Finished updating User Last Login. UserId:'{id}'.");
         }
     }
 }

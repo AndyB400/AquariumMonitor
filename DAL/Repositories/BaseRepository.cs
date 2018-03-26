@@ -1,4 +1,6 @@
-﻿using Serilog;
+﻿
+
+using Microsoft.Extensions.Logging;
 
 namespace AquariumMonitor.DAL.Interfaces
 {
