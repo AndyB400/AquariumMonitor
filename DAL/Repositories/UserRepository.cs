@@ -22,10 +22,11 @@ namespace AquariumMonitor.DAL
 
         private const string InsertQuery = @"INSERT INTO Users (Username,FirstName,LastName,Email)
                                              VALUES (@Username,@FirstName,@LastName,@Email);
-                                             SELECT CAST(SCOPE_IDENTITY() AS INT);";
+                                             SELECT Id, RowVersion FROM Users WHERE Id = CAST(SCOPE_IDENTITY() AS INT);";
 
         private const string UpdateQuery = @"UPDATE Users SET FirstName = @FirstName,LastName = @LastName, Email = @Email
-                                             WHERE Id = @Id;";
+                                             WHERE Id = @Id;
+                                            SELECT RowVersion FROM Users WHERE Id = @Id";
 
         private const string DeleteQuery = @"UPDATE Users SET Deleted = 1 WHERE Id = @Id;";
 
@@ -46,7 +47,10 @@ namespace AquariumMonitor.DAL
 
             using (var connection = _connectionFactory.GetOpenConnection())
             {
-                user.Id = await connection.QueryFirstAsync<int>(InsertQuery, user);
+                var result = await connection.QueryFirstAsync(InsertQuery, user);
+
+                user.Id = result.Id;
+                user.RowVersion = result.RowVersion;
             }
 
              _logger.LogInformation($"Finished adding User. UserId:'{user.Id}'.");
