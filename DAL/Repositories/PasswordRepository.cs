@@ -1,7 +1,7 @@
 ﻿using AquariumMonitor.DAL.Interfaces;
 using AquariumMonitor.Models;
 using Dapper;
-using Microsoft.Extensions.Logging;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,14 +20,14 @@ namespace AquariumMonitor.DAL
                                             VALUES (@userId, @PasswordHashAndSalt, GETDATE())";
 
         public PasswordRepository(IConnectionFactory connectionFactory,
-            ILogger<UserRepository> logger) : base(connectionFactory, logger)
+            ILogger logger) : base(connectionFactory, logger)
         {
 
         }
 
         public async Task Add(UserPassword userPassword)
         {
-            _logger.LogInformation($"Adding password. UserId:{userPassword.UserId}'...");
+            _logger.Information($"Adding password. UserId:{userPassword.UserId}'...");
             try
             {
                 using (var connection = _connectionFactory.GetOpenConnection())
@@ -37,15 +37,15 @@ namespace AquariumMonitor.DAL
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occured whilst adding a new password");
+                _logger.Error(ex, "An error occured whilst adding a new password");
             }
 
-            _logger.LogInformation($"Finished adding password. UserId:{userPassword.UserId}'.");
+            _logger.Information($"Finished adding password. UserId:{userPassword.UserId}'.");
         }
 
         public async Task<List<UserPassword>> Get(int userId)
         {
-            _logger.LogInformation($"Getting passwords for user. UserId:{userId}'...");
+            _logger.Information($"Getting passwords for user. UserId:{userId}'...");
             List<UserPassword> passwords = null;
 
             try
@@ -57,10 +57,10 @@ namespace AquariumMonitor.DAL
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occured whilst getting a users passwords.");
+                _logger.Error(ex, "An error occured whilst getting a users passwords.");
             }
 
-            _logger.LogInformation($"Finished getting passwords for user. UserId:'{userId}'.");
+            _logger.Information($"Finished getting passwords for user. UserId:'{userId}'.");
             return passwords;
         }
     }

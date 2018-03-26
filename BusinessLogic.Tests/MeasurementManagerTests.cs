@@ -1,4 +1,5 @@
-﻿using AquariumMonitor.Models;
+﻿using AquariumMonitor.BusinessLogic.Interfaces;
+using AquariumMonitor.Models;
 using System.Collections.Generic;
 using Xunit;
 
@@ -6,7 +7,7 @@ namespace AquariumMonitor.BusinessLogic.Tests
 {
     public class MeasurementManagerTests
     {
-        private readonly MeasurementManager _measurementManager;
+        private readonly IMeasurementManager _measurementManager;
 
         public MeasurementManagerTests()
         {

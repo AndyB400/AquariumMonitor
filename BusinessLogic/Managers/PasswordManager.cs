@@ -1,7 +1,7 @@
 ﻿using AquariumMonitor.BusinessLogic.Interfaces;
 using AquariumMonitor.DAL.Interfaces;
 using AquariumMonitor.Models;
-using Microsoft.Extensions.Logging;
+using Serilog;
 using Sodium;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,9 +12,9 @@ namespace AquariumMonitor.BusinessLogic
     public class PasswordManager : IPasswordManager
     {
         private readonly IPasswordRepository _passwordRepository;
-        private readonly ILogger<PasswordManager> _logger;
+        private readonly ILogger _logger;
 
-        public PasswordManager(IPasswordRepository passwordRepository, ILogger<PasswordManager> logger)
+        public PasswordManager(IPasswordRepository passwordRepository, ILogger logger)
         {
             _passwordRepository = passwordRepository;
             _logger = logger;
@@ -26,7 +26,7 @@ namespace AquariumMonitor.BusinessLogic
 
             if(passwordHashes == null || passwordHashes.Count == 0)
             {
-                _logger.LogInformation($"User:{userId} has no passwords.");
+                _logger.Information($"User:{userId} has no passwords.");
                 return false;
             }
 
@@ -43,17 +43,17 @@ namespace AquariumMonitor.BusinessLogic
 
         private void CheckExpiredPasswords(int userId, List<UserPassword> passwordHashes, string password)
         {
-            _logger.LogInformation($"Started checking historic passwords for User:{userId}");
+            _logger.Information($"Started checking historic passwords for User:{userId}");
 
             foreach (var oldPasswordHash in passwordHashes)
             {
                 if(CheckPassword(oldPasswordHash.PasswordHashAndSalt, password))
                 {
-                    _logger.LogInformation($"User:{userId} suppplied old password. Expired:{oldPasswordHash.Expired}");
+                    _logger.Information($"User:{userId} suppplied old password. Expired:{oldPasswordHash.Expired}");
                 }
             }
 
-            _logger.LogInformation($"Finished checking historic passwords for User:{userId}");
+            _logger.Information($"Finished checking historic passwords for User:{userId}");
         }
 
         private bool CheckPassword(string passwordHashAndSalt, string password)

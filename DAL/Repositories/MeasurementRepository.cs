@@ -6,7 +6,7 @@ using AquariumMonitor.DAL.Interfaces;
 using AquariumMonitor.Models;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
+using Serilog;
 
 namespace AquariumMonitor.DAL
 {
@@ -42,7 +42,7 @@ namespace AquariumMonitor.DAL
         private const string DeleteQuery = @"UPDATE Measurements SET Deleted = 1 WHERE Id = @Id;";
 
         public MeasurementRepository(IConnectionFactory connectionFactory,
-            ILogger<MeasurementRepository> logger) : base(connectionFactory, logger)
+            ILogger logger) : base(connectionFactory, logger)
         {
 
         }

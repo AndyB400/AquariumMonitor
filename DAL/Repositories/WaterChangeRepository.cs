@@ -5,7 +5,7 @@ using Dapper;
 using AquariumMonitor.DAL.Interfaces;
 using AquariumMonitor.Models;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
+using Serilog;
 
 namespace AquariumMonitor.DAL
 {
@@ -33,7 +33,7 @@ namespace AquariumMonitor.DAL
         private const string DeleteQuery = @"UPDATE WaterChanges SET Deleted = 1 WHERE Id = @Id;";
 
         public WaterChangeRepository(IConnectionFactory connectionFactory,
-            ILogger<WaterChangeRepository> logger) : base(connectionFactory, logger)
+            ILogger logger) : base(connectionFactory, logger)
         {
             
         }
