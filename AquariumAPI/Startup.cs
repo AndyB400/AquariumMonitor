@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using AquariumMonitor.BusinessLogic;
 using AquariumMonitor.BusinessLogic.Interfaces;
 using AquariumMonitor.DAL;
@@ -17,15 +14,12 @@ using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Pwned;
 using AutoMapper;
-using Serilog;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace AquariumMonitorAPI
+namespace AquariumAPI
 {
     public class Startup
     {
