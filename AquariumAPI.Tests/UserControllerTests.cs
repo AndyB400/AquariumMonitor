@@ -20,27 +20,27 @@ namespace AquariumAPI.Tests
 {
     public class UserControllerTests
     {
-        private UserController controller;
-        private Mock<IConfiguration> mockConfiguration;
-        private Mock<ILogger<UserController>> mockLogger;
-        private Mock<IUserRepository> mockUserRepository;
-        private Mock<IPasswordManager> mockPasswordManager;
-        private Mock<IPasswordRepository> mockPasswordRepository;
-        private Mock<IMapper> mockMapper;
-        private Mock<IHaveIBeenPwnedRestClient>  mockPwnedClient;
-        private Mock<IUrlHelper> mockUrlHelper;
+        private UserController _controller;
+        private readonly Mock<IConfiguration> _mockConfiguration;
+        private readonly Mock<ILogger<UserController>> _mockLogger;
+        private readonly Mock<IUserRepository> _mockUserRepository;
+        private readonly Mock<IPasswordManager> _mockPasswordManager;
+        private readonly Mock<IPasswordRepository> _mockPasswordRepository;
+        private readonly Mock<IMapper> _mockMapper;
+        private readonly Mock<IHaveIBeenPwnedRestClient>  _mockPwnedClient;
+        private readonly Mock<IUrlHelper> _mockUrlHelper;
 
         public UserControllerTests()
         {
             // Create mocks
-            mockConfiguration = new Mock<IConfiguration>();
-            mockLogger = new Mock<ILogger<UserController>>();
-            mockUserRepository = new Mock<IUserRepository>();
-            mockPasswordManager = new Mock<IPasswordManager>();
-            mockPasswordRepository = new Mock<IPasswordRepository>();
-            mockMapper = new Mock<IMapper>();
-            mockPwnedClient = new Mock<IHaveIBeenPwnedRestClient>();
-            mockUrlHelper = new Mock<IUrlHelper>();
+            _mockConfiguration = new Mock<IConfiguration>();
+            _mockLogger = new Mock<ILogger<UserController>>();
+            _mockUserRepository = new Mock<IUserRepository>();
+            _mockPasswordManager = new Mock<IPasswordManager>();
+            _mockPasswordRepository = new Mock<IPasswordRepository>();
+            _mockMapper = new Mock<IMapper>();
+            _mockPwnedClient = new Mock<IHaveIBeenPwnedRestClient>();
+            _mockUrlHelper = new Mock<IUrlHelper>();
 
             // Setup any generic mock behaviour
         }
@@ -55,15 +55,16 @@ namespace AquariumAPI.Tests
                     new Claim(ClaimTypes.NameIdentifier, "1")
              }));
 
-            controller = new UserController(mockConfiguration.Object, mockLogger.Object, mockUserRepository.Object,
-                mockPasswordManager.Object, mockPasswordRepository.Object, mockMapper.Object, mockPwnedClient.Object);
-
-            controller.ControllerContext = new ControllerContext()
+            _controller = new UserController(_mockConfiguration.Object, _mockLogger.Object, _mockUserRepository.Object,
+                _mockPasswordManager.Object, _mockPasswordRepository.Object, _mockMapper.Object, _mockPwnedClient.Object)
             {
-                HttpContext = new DefaultHttpContext() { User = claimsPrincipal }
-            };
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = new DefaultHttpContext { User = claimsPrincipal }
+                },
 
-            controller.Url = mockUrlHelper.Object;
+                Url = _mockUrlHelper.Object
+            };
         }
 
         [Fact]
@@ -92,12 +93,12 @@ namespace AquariumAPI.Tests
                 LastLogin = new DateTimeOffset(new DateTime(2017, 1, 1)),
                 RowVersion = Encoding.ASCII.GetBytes("RowVersion")
             };
-            mockUserRepository.Setup(r => r.Get(1)).ReturnsAsync(user).Verifiable();
-            mockMapper.Setup(am => am.Map<UserModel>(user)).Returns(model).Verifiable();
+            _mockUserRepository.Setup(r => r.Get(1)).ReturnsAsync(user).Verifiable();
+            _mockMapper.Setup(am => am.Map<UserModel>(user)).Returns(model).Verifiable();
             SetupController();
 
             //Act
-            var result = await controller.Get(1);
+            var result = await _controller.Get(1);
 
             //Assert
             Assert.Equal(typeof(OkObjectResult), result.GetType());
@@ -115,8 +116,8 @@ namespace AquariumAPI.Tests
             Assert.Equal("SuperSecretPassword", userModel.Password);
             Assert.Equal("https://aquamonitor.com/api/users/1", userModel.Url);
 
-            mockUserRepository.Verify(r => r.Get(1), Times.Once);
-            mockMapper.Verify(m => m.Map<UserModel>(It.IsAny<User>()), Times.Once);
+            _mockUserRepository.Verify(r => r.Get(1), Times.Once);
+            _mockMapper.Verify(m => m.Map<UserModel>(It.IsAny<User>()), Times.Once);
         }
 
         [Fact]
@@ -124,11 +125,11 @@ namespace AquariumAPI.Tests
         public async Task Get_returns_not_found()
         {
             //Arrange
-            mockUserRepository.Setup(r => r.Get(2)).Returns(Task.FromResult<User>(null)).Verifiable();
+            _mockUserRepository.Setup(r => r.Get(2)).Returns(Task.FromResult<User>(null)).Verifiable();
             SetupController();
 
             //Act
-            var result = await controller.Get(2);
+            var result = await _controller.Get(2);
 
             //Assert
             Assert.Equal(typeof(NotFoundResult), result.GetType());
@@ -136,7 +137,7 @@ namespace AquariumAPI.Tests
             var notFoundResult = (NotFoundResult)result;
             Assert.Equal(404, notFoundResult.StatusCode);
 
-            mockUserRepository.Verify(r => r.Get(2), Times.Once);
+            _mockUserRepository.Verify(r => r.Get(2), Times.Once);
         }
 
         [Fact]
@@ -145,10 +146,9 @@ namespace AquariumAPI.Tests
         {
             //Arrange
             SetupController();
-            UserModel model = null;
 
             //Act
-            var result = await controller.Post(model);
+            var result = await _controller.Post(null);
 
             //Assert
             Assert.Equal(typeof(StatusCodeResult), result.GetType());
@@ -166,11 +166,11 @@ namespace AquariumAPI.Tests
             {
                 FirstName = "andy"
             };
-            mockMapper.Setup(am => am.Map<User>(It.IsAny<UserModel>())).Returns(userNoPassword);
+            _mockMapper.Setup(am => am.Map<User>(It.IsAny<UserModel>())).Returns(userNoPassword);
             SetupController();
 
             //Act
-            var result = await controller.Post(null);
+            var result = await _controller.Post(null);
 
             //Assert
             Assert.Equal(typeof(BadRequestObjectResult), result.GetType());
@@ -189,16 +189,16 @@ namespace AquariumAPI.Tests
             {
                 Password = "Password"
             };
-            mockMapper.Setup(am => am.Map<User>(It.IsAny<UserModel>())).Returns(user);
+            _mockMapper.Setup(am => am.Map<User>(It.IsAny<UserModel>())).Returns(user);
 
-            mockPwnedClient.Setup(pc => pc.IsPasswordPwned(It.IsAny<string>())).ReturnsAsync(false);
+            _mockPwnedClient.Setup(pc => pc.IsPasswordPwned(It.IsAny<string>())).ReturnsAsync(false);
 
             var existingUser = new User();
-            mockUserRepository.Setup(ur => ur.Get(It.IsAny<string>())).ReturnsAsync(existingUser);
+            _mockUserRepository.Setup(ur => ur.Get(It.IsAny<string>())).ReturnsAsync(existingUser);
             SetupController();
 
             //Act
-            var result = await controller.Post(null);
+            var result = await _controller.Post(null);
 
             //Assert
             Assert.Equal(typeof(BadRequestObjectResult), result.GetType());
@@ -223,12 +223,12 @@ namespace AquariumAPI.Tests
                 Password = "Password",
                  Url = "http://aqauamonitor.com/api/users/2"
             };
-            mockMapper.Setup(am => am.Map<User>(It.IsAny<UserModel>())).Returns(user);
-            mockMapper.Setup(am => am.Map<UserModel>(It.IsAny<User>())).Returns(model);
+            _mockMapper.Setup(am => am.Map<User>(It.IsAny<UserModel>())).Returns(user);
+            _mockMapper.Setup(am => am.Map<UserModel>(It.IsAny<User>())).Returns(model);
 
-            mockPwnedClient.Setup(pc => pc.IsPasswordPwned(It.IsAny<string>())).ReturnsAsync(false);
+            _mockPwnedClient.Setup(pc => pc.IsPasswordPwned(It.IsAny<string>())).ReturnsAsync(false);
 
-            mockUrlHelper
+            _mockUrlHelper
                 .Setup(m => m.Link(It.IsAny<string>(), It.IsAny<object>()))
                 .Returns("http://aqauamonitor.com/api/users/1")
                 .Verifiable();
@@ -236,7 +236,7 @@ namespace AquariumAPI.Tests
             SetupController();
 
             //Act
-            var result = await controller.Post(null);
+            var result = await _controller.Post(null);
 
             //Assert
             Assert.Equal(typeof(CreatedResult), result.GetType());
@@ -259,7 +259,7 @@ namespace AquariumAPI.Tests
             SetupController();
 
             //Act
-            var result = await controller.Put(2, model);
+            var result = await _controller.Put(2, model);
 
             //Assert
             Assert.Equal(typeof(NotFoundResult), result.GetType());
@@ -278,14 +278,14 @@ namespace AquariumAPI.Tests
                 RowVersion = Encoding.ASCII.GetBytes("RowVersion")
             };
             var model = new UserModel();
-            mockMapper.Setup(am => am.Map(It.IsAny<UserModel>(), It.IsAny<User>())).Verifiable();
-            mockMapper.Setup(am => am.Map<UserModel>(It.IsAny<User>())).Returns(model);
-            mockUserRepository.Setup(ur => ur.Get(It.IsAny<int>())).ReturnsAsync(user).Verifiable();
+            _mockMapper.Setup(am => am.Map(It.IsAny<UserModel>(), It.IsAny<User>())).Verifiable();
+            _mockMapper.Setup(am => am.Map<UserModel>(It.IsAny<User>())).Returns(model);
+            _mockUserRepository.Setup(ur => ur.Get(It.IsAny<int>())).ReturnsAsync(user).Verifiable();
 
             SetupController();
 
             //Act
-            var result = await controller.Put(1, model);
+            var result = await _controller.Put(1, model);
 
             //Assert
             Assert.Equal(typeof(OkObjectResult), result.GetType());
@@ -293,10 +293,10 @@ namespace AquariumAPI.Tests
             var okObjectResult = (OkObjectResult)result;
             Assert.Equal(200, okObjectResult.StatusCode);
 
-            mockUserRepository.Verify(r => r.Get(1), Times.Once);
-            mockUserRepository.Verify(r => r.Update(It.IsAny<User>()), Times.Once);
+            _mockUserRepository.Verify(r => r.Get(1), Times.Once);
+            _mockUserRepository.Verify(r => r.Update(It.IsAny<User>()), Times.Once);
 
-            mockMapper.Verify(m => m.Map(It.IsAny<UserModel>(), It.IsAny<User>()), Times.Once);
+            _mockMapper.Verify(m => m.Map(It.IsAny<UserModel>(), It.IsAny<User>()), Times.Once);
         }
 
         [Fact]
@@ -306,16 +306,16 @@ namespace AquariumAPI.Tests
             //Arrange
             var user = new User();
             var model = new UserModel();
-            mockMapper.Setup(am => am.Map(It.IsAny<UserModel>(), It.IsAny<User>())).Verifiable();
+            _mockMapper.Setup(am => am.Map(It.IsAny<UserModel>(), It.IsAny<User>())).Verifiable();
 
             var existingUser = new User();
-            mockUserRepository.Setup(ur => ur.Get(It.IsAny<int>())).ReturnsAsync(existingUser).Verifiable();
-            mockUserRepository.Setup(ur => ur.Update(It.IsAny<User>())).Throws(new Exception()).Verifiable();
+            _mockUserRepository.Setup(ur => ur.Get(It.IsAny<int>())).ReturnsAsync(existingUser).Verifiable();
+            _mockUserRepository.Setup(ur => ur.Update(It.IsAny<User>())).Throws(new Exception()).Verifiable();
 
             SetupController(); 
 
             //Act
-            var result = await controller.Put(1, model);
+            var result = await _controller.Put(1, model);
 
             //Assert
             Assert.Equal(typeof(BadRequestObjectResult), result.GetType());
@@ -324,10 +324,10 @@ namespace AquariumAPI.Tests
             Assert.Equal(400, badRequestObjectResult.StatusCode);
             Assert.Equal("Could not update User", badRequestObjectResult.Value.ToString());
 
-            mockUserRepository.Verify(r => r.Get(1), Times.Once);
-            mockUserRepository.Verify(r => r.Update(It.IsAny<User>()), Times.Once);
+            _mockUserRepository.Verify(r => r.Get(1), Times.Once);
+            _mockUserRepository.Verify(r => r.Update(It.IsAny<User>()), Times.Once);
 
-            mockMapper.Verify(m => m.Map(It.IsAny<UserModel>(), It.IsAny<User>()), Times.Once);
+            _mockMapper.Verify(m => m.Map(It.IsAny<UserModel>(), It.IsAny<User>()), Times.Once);
         }
 
         [Fact]
@@ -339,12 +339,12 @@ namespace AquariumAPI.Tests
             {
                 Id = 1
             };
-            mockUserRepository.Setup(r => r.Get(1)).ReturnsAsync(user).Verifiable();
-            mockUserRepository.Setup(r => r.Delete(1)).Returns(Task.Delay(0)).Verifiable();
+            _mockUserRepository.Setup(r => r.Get(1)).ReturnsAsync(user).Verifiable();
+            _mockUserRepository.Setup(r => r.Delete(1)).Returns(Task.Delay(0)).Verifiable();
             SetupController();
 
             //Act
-            var result = await controller.Delete(1);
+            var result = await _controller.Delete(1);
 
             //Assert
             Assert.Equal(typeof(OkResult), result.GetType());
@@ -352,8 +352,8 @@ namespace AquariumAPI.Tests
             var okResult = (OkResult)result;
             Assert.Equal(200, okResult.StatusCode);
 
-            mockUserRepository.Verify(r => r.Get(1), Times.Once);
-            mockUserRepository.Verify(r => r.Delete(1), Times.Once);
+            _mockUserRepository.Verify(r => r.Get(1), Times.Once);
+            _mockUserRepository.Verify(r => r.Delete(1), Times.Once);
         }
 
         [Fact]
@@ -364,7 +364,7 @@ namespace AquariumAPI.Tests
             SetupController();
 
             //Act
-            var result = await controller.Delete(2);
+            var result = await _controller.Delete(2);
 
             //Assert
             Assert.Equal(typeof(NotFoundResult), result.GetType());
@@ -372,7 +372,7 @@ namespace AquariumAPI.Tests
             var notFoundResult = (NotFoundResult)result;
             Assert.Equal(404, notFoundResult.StatusCode);
 
-            mockUserRepository.Verify(r => r.Get(2), Times.Once);
+            _mockUserRepository.Verify(r => r.Get(2), Times.Once);
         }
     }
 }
