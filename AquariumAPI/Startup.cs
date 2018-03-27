@@ -1,27 +1,31 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using AquariumMonitor.BusinessLogic;
+using AquariumMonitor.BusinessLogic.Interfaces;
 using AquariumMonitor.DAL;
 using AquariumMonitor.DAL.Interfaces;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using AutoMapper;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using AquariumMonitor.BusinessLogic.Interfaces;
-using AquariumMonitor.BusinessLogic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.AspNetCore.Mvc.Authorization;
-using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Pwned;
+using AutoMapper;
 using Serilog;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace AquariumAPI
+namespace AquariumMonitorAPI
 {
     public class Startup
     {
@@ -75,14 +79,14 @@ namespace AquariumAPI
                             .Build();
 
             services.AddMvc(opt =>
+            {
+                if (!_env.IsProduction())
                 {
-                    if (! _env.IsProduction())
-                    {
-                        opt.SslPort = 44308;
-                    }
-                    opt.Filters.Add(new RequireHttpsAttribute());
-                    opt.Filters.Add(new AuthorizeFilter(authenticatedPolicy));
-                })
+                    opt.SslPort = 44308;
+                }
+                opt.Filters.Add(new RequireHttpsAttribute());
+                opt.Filters.Add(new AuthorizeFilter(authenticatedPolicy));
+            })
                 .AddJsonOptions(opt =>
                 {
                     opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
@@ -122,40 +126,13 @@ namespace AquariumAPI
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             app.UseAuthentication();
 
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-
-                loggerFactory.AddSerilog(new LoggerConfiguration()
-                           .MinimumLevel.Information()
-                           .Enrich.WithEnvironmentUserName()
-                           .Enrich.WithMachineName()
-                           .WriteTo.MSSqlServer(connectionString: Configuration.GetConnectionString(Constants.DBConnectionName), tableName: Constants.SerilogTableName)
-                           .CreateLogger());
-            }
-            if (env.IsStaging())
-            {
-                app.UseDeveloperExceptionPage();
-
-                loggerFactory.AddSerilog(new LoggerConfiguration()
-                           .MinimumLevel.Information()
-                           .Enrich.WithEnvironmentUserName()
-                           .Enrich.WithMachineName()
-                           .WriteTo.MSSqlServer(connectionString: Configuration.GetConnectionString(Constants.DBConnectionName), tableName: Constants.SerilogTableName)
-                           .CreateLogger());
-            }
-            else if (env.IsProduction())
-            {
-                loggerFactory.AddSerilog(new LoggerConfiguration()
-                            .MinimumLevel.Warning()
-                            .Enrich.WithEnvironmentUserName()
-                            .Enrich.WithMachineName()
-                            .WriteTo.MSSqlServer(connectionString: Configuration.GetConnectionString(Constants.DBConnectionName), tableName: Constants.SerilogTableName)
-                            .CreateLogger());
             }
 
             app.UseCors(Configuration[Constants.CorsPolicyName]);
