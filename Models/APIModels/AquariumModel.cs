@@ -37,5 +37,6 @@ namespace AquariumMonitor.APIModels
         [Range(1, 100000, ErrorMessage = "{0} must be between {1} and {2}")]
         public decimal? Length { get; set; }
         public string DimensionUnitName { get; set; }
+        public byte[] RowVersion { get; set; }
     }
 }
