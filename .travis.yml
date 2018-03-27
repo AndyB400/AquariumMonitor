@@ -7,6 +7,5 @@ install:
 
 script:
  - dotnet build
- - dotnet test AquariumAPI.Tests/AquariumAPI.Tests.csproj
  - dotnet test BusinessLogic.Tests/BusinessLogic.Tests.csproj
  - dotnet test Models.Tests/Models.Tests.csproj
