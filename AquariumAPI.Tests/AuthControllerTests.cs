@@ -1,7 +1,6 @@
-﻿
-
-namespace AquariumAPI.Tests
+﻿namespace AquariumAPI.Tests
 {
+
     public class AuthControllerTests
     {
         public void TestCreateToken()

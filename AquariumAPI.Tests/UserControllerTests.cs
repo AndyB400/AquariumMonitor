@@ -1,7 +1,7 @@
 ﻿using AquariumAPI.Controllers;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 using Xunit;
 using Moq;
 using AquariumMonitor.DAL.Interfaces;
@@ -15,14 +15,15 @@ using AquariumMonitor.Models.APIModels;
 using AquariumMonitor.Models;
 using System.Text;
 using System.Security.Claims;
+using BusinessLogic.Interfaces;
 
 namespace AquariumAPI.Tests
 {
+    [ExcludeFromCodeCoverage]
     public class UserControllerTests
     {
         private UserController _controller;
-        private readonly Mock<IConfiguration> _mockConfiguration;
-        private readonly Mock<ILogger<UserController>> _mockLogger;
+        private readonly Mock<ILoggerAdapter<BaseController>> _mockLogger;
         private readonly Mock<IUserRepository> _mockUserRepository;
         private readonly Mock<IPasswordManager> _mockPasswordManager;
         private readonly Mock<IPasswordRepository> _mockPasswordRepository;
@@ -33,8 +34,7 @@ namespace AquariumAPI.Tests
         public UserControllerTests()
         {
             // Create mocks
-            _mockConfiguration = new Mock<IConfiguration>();
-            _mockLogger = new Mock<ILogger<UserController>>();
+            _mockLogger = new Mock<ILoggerAdapter<BaseController>>();
             _mockUserRepository = new Mock<IUserRepository>();
             _mockPasswordManager = new Mock<IPasswordManager>();
             _mockPasswordRepository = new Mock<IPasswordRepository>();
@@ -55,7 +55,7 @@ namespace AquariumAPI.Tests
                     new Claim(ClaimTypes.NameIdentifier, "1")
              }));
 
-            _controller = new UserController(_mockConfiguration.Object, _mockLogger.Object, _mockUserRepository.Object,
+            _controller = new UserController(_mockLogger.Object, _mockUserRepository.Object,
                 _mockPasswordManager.Object, _mockPasswordRepository.Object, _mockMapper.Object, _mockPwnedClient.Object)
             {
                 ControllerContext = new ControllerContext

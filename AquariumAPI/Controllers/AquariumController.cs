@@ -13,6 +13,7 @@ using AquariumMonitor.BusinessLogic.Interfaces;
 using Microsoft.Net.Http.Headers;
 using System.Linq;
 using System.Net;
+using BusinessLogic.Interfaces;
 
 namespace AquariumAPI.Controllers
 {
@@ -28,7 +29,7 @@ namespace AquariumAPI.Controllers
         private readonly IAquariumTypeManager _aquariumTypeManager;
 
         public AquariumController(IAquariumRepository repository,
-            ILogger<AquariumController> logger, 
+            ILoggerAdapter<BaseController> logger, 
             IMapper mapper,
             IUnitManager unitManager,
             IAquariumTypeManager aquariumTypeManager) : base(logger, mapper)
@@ -43,7 +44,7 @@ namespace AquariumAPI.Controllers
         {
             var aquariums = await _repository.GetForUser(UserId);
 
-            return Ok(_mapper.Map<IEnumerable<AquariumModel>>(aquariums));
+            return Ok(Mapper.Map<IEnumerable<AquariumModel>>(aquariums));
         }
 
         [HttpGet("{aquariumId}", Name = "AquariumGet")]
@@ -51,11 +52,15 @@ namespace AquariumAPI.Controllers
         {
             var aquarium = await _repository.Get(UserId, aquariumId);
 
-            if (aquarium == null) return NotFound();
+            if (aquarium == null)
+            {
+                Logger.Warning($"Aquarium not found. AquariumID: {aquariumId}");
+                return NotFound();
+            }
 
             AddETag(aquarium.RowVersion);
 
-            return Ok(_mapper.Map<AquariumModel>(aquarium));
+            return Ok(Mapper.Map<AquariumModel>(aquarium));
         }
 
         // POST: api/aquarium
@@ -63,9 +68,11 @@ namespace AquariumAPI.Controllers
         [UserSecurityCheck]
         public async Task<IActionResult> Post([FromBody]AquariumModel model)
         {
+            if (model == null) return BadRequest("Aquarium cannot be null.");
+
             try
             {
-                var aquarium = _mapper.Map<Aquarium>(model);
+                var aquarium = Mapper.Map<Aquarium>(model);
 
                 if (aquarium == null)
                 {
@@ -78,18 +85,18 @@ namespace AquariumAPI.Controllers
 
                 await LookupTypeAndUnits(aquarium);
 
-                _logger.LogInformation("Creating new aquarium...");
+                Logger.Information("Creating new aquarium...");
                 await _repository.Add(aquarium);
-                _logger.LogInformation($"New aquarium created. AquariumID:{aquarium.Id}.");
+                Logger.Information($"New aquarium created. AquariumID:{aquarium.Id}.");
 
                 AddETag(aquarium.RowVersion);
 
                 var url = Url.Link("AquariumGet", new { UserId, aquariumId = aquarium.Id });
-                return Created(url, _mapper.Map<AquariumModel>(aquarium));
+                return Created(url, Mapper.Map<AquariumModel>(aquarium));
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occured whilst trying to create Aquarium.");
+                Logger.Error(ex, "An error occured whilst trying to create Aquarium.");
             }
             return BadRequest("Could not create Aquarium");
         }
@@ -98,10 +105,16 @@ namespace AquariumAPI.Controllers
         [HttpPut("{aquariumId}")]
         public async Task<IActionResult> Put(int aquariumId, [FromBody]AquariumModel model)
         {
+            if (model == null) return BadRequest("Aquarium cannot be null.");
+
             try
             {
                 var aquarium = await _repository.Get(UserId, aquariumId);
-                if (aquarium == null) return NotFound();
+                if (aquarium == null)
+                {
+                    Logger.Warning($"Aquarium not found. AquariumID: {aquariumId}");
+                    return NotFound();
+                }
 
                 if (Request.Headers.ContainsKey(HeaderNames.IfMatch))
                 {
@@ -112,20 +125,20 @@ namespace AquariumAPI.Controllers
                     }
                 }
 
-                _mapper.Map(model, aquarium);
+                Mapper.Map(model, aquarium);
 
                 await LookupTypeAndUnits(aquarium);
 
-                _logger.LogInformation($"Updating aquarium. AquariumID:{aquariumId}");
+                Logger.Information($"Updating aquarium. AquariumID:{aquariumId}");
                 await _repository.Update(aquarium);
 
                 AddETag(aquarium.RowVersion);
 
-                return Ok(_mapper.Map<AquariumModel>(aquarium));
+                return Ok(Mapper.Map<AquariumModel>(aquarium));
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occured whilst trying to update Aquarium");
+                Logger.Error(ex, "An error occured whilst trying to update Aquarium");
             }
             return BadRequest("Could not update Aquarium");
         }
@@ -137,7 +150,11 @@ namespace AquariumAPI.Controllers
             try
             {
                 var aquarium = await _repository.Get(UserId, aquariumId);
-                if (aquarium == null) return NotFound();
+                if (aquarium == null)
+                {
+                    Logger.Warning($"Aquarium not found. AquariumID: {aquariumId}");
+                    return NotFound();
+                }
 
                 if (Request.Headers.ContainsKey(HeaderNames.IfMatch))
                 {
@@ -148,14 +165,14 @@ namespace AquariumAPI.Controllers
                     }
                 }
 
-                _logger.LogInformation($"Deleting Aquarium. AquariumId:{aquariumId}");
+                Logger.Information($"Deleting Aquarium. AquariumId:{aquariumId}");
                 await _repository.Delete(aquariumId);
 
                 return Ok();
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"An error occured whilst trying to delete Aquarium. AquariumId:{aquariumId}");
+                Logger.Error(ex, $"An error occured whilst trying to delete Aquarium. AquariumId:{aquariumId}");
             }
             return BadRequest("Could not delete Aquarium");
         }

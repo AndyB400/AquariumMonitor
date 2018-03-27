@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using AquariumMonitor.APIModels;
 using AquariumMonitor.Models;
 using AquariumAPI.Filters;
+using BusinessLogic.Interfaces;
 using Microsoft.AspNetCore.Cors;
 
 namespace AquariumAPI.Controllers
@@ -20,15 +21,12 @@ namespace AquariumAPI.Controllers
     public class WaterChangeController : BaseController
     {
         private readonly IWaterChangeRepository _repository;
-        private readonly IAquariumRepository _aquariumRepository;
 
         public WaterChangeController(IWaterChangeRepository repository, 
-            IAquariumRepository aquariumRepository,
-            ILogger<WaterChangeController> logger, 
+            ILoggerAdapter<BaseController> logger, 
             IMapper mapper) : base(logger, mapper)
         {
             _repository = repository;
-            _aquariumRepository = aquariumRepository;
         }
 
         // GET: api/WaterChange
@@ -36,7 +34,7 @@ namespace AquariumAPI.Controllers
         public async Task<IActionResult> Get(int aquariumId)
         {
             var waterChanges = await _repository.GetForAquarium(UserId, aquariumId);
-            return Ok(_mapper.Map<IEnumerable<WaterChangeModel>>(waterChanges));
+            return Ok(Mapper.Map<IEnumerable<WaterChangeModel>>(waterChanges));
         }
 
         // GET: api/WaterChange/5
@@ -49,7 +47,7 @@ namespace AquariumAPI.Controllers
 
             AddETag(waterChange.RowVersion);
 
-            return Ok(_mapper.Map<WaterChangeModel>(waterChange));
+            return Ok(Mapper.Map<WaterChangeModel>(waterChange));
         }
 
         // POST: api/WaterChange
@@ -58,7 +56,7 @@ namespace AquariumAPI.Controllers
         {
             try
             {
-                var waterChange = _mapper.Map<WaterChange>(model);
+                var waterChange = Mapper.Map<WaterChange>(model);
 
                 // User URL values over model values
                 waterChange.UserId = UserId;
@@ -74,11 +72,11 @@ namespace AquariumAPI.Controllers
                 AddETag(waterChange.RowVersion);
 
                 var url = Url.Link("WaterChangeGet", new { UserId, aquariumId, waterChangeId = waterChange.Id });
-                return Created(url, _mapper.Map<WaterChangeModel>(waterChange));
+                return Created(url, Mapper.Map<WaterChangeModel>(waterChange));
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occured whilst trying to create waterChange.");
+                Logger.Error(ex, "An error occured whilst trying to create waterChange.");
             }
             return BadRequest("Could not create waterChange");
         }
@@ -93,16 +91,16 @@ namespace AquariumAPI.Controllers
                 if (waterChange == null) return NotFound();
                 if (waterChange.AquariumId != aquariumId) return BadRequest("Aquarium and WaterChange don't match");
 
-                _mapper.Map(model, waterChange);
+                Mapper.Map(model, waterChange);
                 await _repository.Update(waterChange);
 
                 AddETag(waterChange.RowVersion);
 
-                return Ok(_mapper.Map <WaterChangeModel>(waterChange));
+                return Ok(Mapper.Map <WaterChangeModel>(waterChange));
             }
             catch(Exception ex)
             {
-                _logger.LogError(ex, "An error occured whilst trying to update WaterChange.");
+                Logger.Error(ex, "An error occured whilst trying to update WaterChange.");
             }
             return BadRequest("Could not update WaterChange");
         }
@@ -125,7 +123,7 @@ namespace AquariumAPI.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occured whilst trying to delete WaterChange.");
+                Logger.Error(ex, "An error occured whilst trying to delete WaterChange.");
             }
             return BadRequest("Could not delete WaterChange");
         }

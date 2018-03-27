@@ -7,12 +7,9 @@ using AquariumMonitor.BusinessLogic.Interfaces;
 using AquariumMonitor.DAL.Interfaces;
 using AquariumMonitor.Models;
 using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
+using BusinessLogic.Interfaces;
 using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Microsoft.Net.Http.Headers;
 
 namespace AquariumAPI.Controllers
 {
@@ -24,19 +21,18 @@ namespace AquariumAPI.Controllers
     public class MeasurementController : BaseController
     {
         private readonly IMeasurementRepository _repository;
-        private readonly IAquariumRepository _aquariumRepository;
         private readonly IValidationManager _validationManager;
         private readonly IUnitManager _unitManager;
         private readonly IMeasurementManager _measurementManager;
 
-        public MeasurementController(IMeasurementRepository repository, 
-            ILogger<MeasurementController> logger,  IMapper mapper,
-            IAquariumRepository aquariumRepository, IValidationManager validationManager, 
+        public MeasurementController(IMeasurementRepository repository,
+            ILoggerAdapter<BaseController> logger,  
+            IMapper mapper,
+            IValidationManager validationManager, 
             IUnitManager unitManager,
             IMeasurementManager measurementManager) : base(logger, mapper)
         {
             _repository = repository;
-            _aquariumRepository = aquariumRepository;
             _validationManager = validationManager;
             _unitManager = unitManager;
             _measurementManager = measurementManager;
@@ -51,7 +47,7 @@ namespace AquariumAPI.Controllers
 
             AddETag(measurement.RowVersion);
 
-            return Ok(_mapper.Map<MeasurementModel>(measurement));
+            return Ok(Mapper.Map<MeasurementModel>(measurement));
         }
 
         [HttpGet]
@@ -59,7 +55,7 @@ namespace AquariumAPI.Controllers
         {
             var measurements = await _repository.GetForAquarium(UserId, aquariumId);
 
-            var models = _mapper.Map<List<MeasurementModel>>(measurements);
+            var models = Mapper.Map<List<MeasurementModel>>(measurements);
 
             return Ok(models);
         }
@@ -69,7 +65,7 @@ namespace AquariumAPI.Controllers
         {
             try
             {
-                var measurement = _mapper.Map<Measurement>(model);
+                var measurement = Mapper.Map<Measurement>(model);
 
                 if (measurement == null)
                 {
@@ -98,11 +94,11 @@ namespace AquariumAPI.Controllers
                 AddETag(measurement.RowVersion);
 
                 var url = Url.Link("MeasurementGet", new { UserId, aquariumId, ((Measurement)measurement).Id });
-                return Created(url, _mapper.Map<MeasurementModel>(measurement));
+                return Created(url, Mapper.Map<MeasurementModel>(measurement));
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occured whilst trying to create Measurement.");
+                Logger.Error(ex, "An error occured whilst trying to create Measurement.");
             }
             return BadRequest("Could not create Measurement");
         }
@@ -117,7 +113,7 @@ namespace AquariumAPI.Controllers
                 if (measurement == null) return NotFound();
                 if (measurement.AquariumId != aquariumId) return BadRequest("Aquarium and Measurement don't match");
 
-                _mapper.Map(model, measurement);
+                Mapper.Map(model, measurement);
 
                 // Validate
                 var results = _validationManager.Validate(measurement);
@@ -133,11 +129,11 @@ namespace AquariumAPI.Controllers
                 await _repository.Update(measurement);
 
                 AddETag(measurement.RowVersion);
-                return Ok(_mapper.Map<MeasurementModel>(measurement));
+                return Ok(Mapper.Map<MeasurementModel>(measurement));
             }
             catch(Exception ex)
             {
-                _logger.LogError(ex, "An error occured whilst trying to update Measurement.");
+                Logger.Error(ex, "An error occured whilst trying to update Measurement.");
             }
             return BadRequest("Could not update Measurment");
         }
@@ -160,7 +156,7 @@ namespace AquariumAPI.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occured whilst trying to delete Measurement.");
+                Logger.Error(ex, "An error occured whilst trying to delete Measurement.");
             }
             return BadRequest("Could not delete Measurment");
         }

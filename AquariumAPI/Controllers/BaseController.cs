@@ -1,29 +1,26 @@
-﻿using AquariumMonitor.DAL.Interfaces;
-using AquariumMonitor.Models;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.Extensions.Logging;
 using Microsoft.Net.Http.Headers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Threading.Tasks;
+using BusinessLogic.Interfaces;
 
 namespace AquariumAPI.Controllers
 {
     public abstract class BaseController : Controller
     {
         public const string URLHELPER = "URLHELPER";
-        protected readonly ILogger _logger;
-        protected readonly IMapper _mapper;
+        protected readonly IMapper Mapper;
+        protected readonly ILoggerAdapter<BaseController> Logger;
 
-        public BaseController(ILogger logger, IMapper mapper)
+        protected BaseController(ILoggerAdapter<BaseController> _logger, IMapper mapper)
         {
-            _logger = logger;
-            _mapper = mapper;
+            Mapper = mapper;
+            Logger = _logger;
         }
 
         private int _userId;

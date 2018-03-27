@@ -10,6 +10,7 @@ using AquariumMonitor.DAL.Interfaces;
 using System.Threading.Tasks;
 using AutoMapper;
 using AquariumMonitor.BusinessLogic.Interfaces;
+using BusinessLogic.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Net.Http.Headers;
 using Pwned;
@@ -22,21 +23,18 @@ namespace AquariumAPI.Controllers
     [Route("api/users")]
     public class UserController : BaseController
     {
-        private readonly IConfiguration _configuration;
         private readonly IUserRepository _repository;
         private readonly IPasswordManager _passwordManager;
         private readonly IPasswordRepository _passwordRepository;
         private readonly IHaveIBeenPwnedRestClient _pwnedClient;
 
-        public UserController(IConfiguration configuration,
-            ILogger<UserController> logger,
+        public UserController(ILoggerAdapter<BaseController> logger,
             IUserRepository repository,
             IPasswordManager passwordManager,
             IPasswordRepository passwordRepository,
             IMapper mapper,
             IHaveIBeenPwnedRestClient pwnedClient) : base(logger, mapper)
         {
-            _configuration = configuration;
             _repository = repository;
             _passwordManager = passwordManager;
             _passwordRepository = passwordRepository;
@@ -52,7 +50,7 @@ namespace AquariumAPI.Controllers
 
             AddETag(user.RowVersion);
 
-            return Ok(_mapper.Map<UserModel>(user));
+            return Ok(Mapper.Map<UserModel>(user));
         }
 
         // POST: api/aquarium
@@ -61,7 +59,7 @@ namespace AquariumAPI.Controllers
         {
             try
             {
-                var user = _mapper.Map<User>(model);
+                var user = Mapper.Map<User>(model);
 
                 if (user == null)
                 {
@@ -85,20 +83,20 @@ namespace AquariumAPI.Controllers
                     return BadRequest("User already exists");
                 }
 
-                _logger.LogInformation("Creating new user...");
+                Logger.Information("Creating new user...");
                 await _repository.Add(user);
-                _logger.LogInformation($"New user created. UserID:{user.Id}.");
+                Logger.Information($"New user created. UserID:{user.Id}.");
 
                 await AddPassword(user);
 
                 AddETag(user.RowVersion);
 
                 var url = Url.Link("UserGet", new { userId = user.Id });
-                return Created(url, _mapper.Map<UserModel>(user));
+                return Created(url, Mapper.Map<UserModel>(user));
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occured whilst trying to create User.");
+                Logger.Error(ex, "An error occured whilst trying to create User.");
             }
             return BadRequest("Could not create User");
         }
@@ -125,18 +123,18 @@ namespace AquariumAPI.Controllers
 
                 if (user == null) return NotFound();
 
-                _mapper.Map(model, user);
+                Mapper.Map(model, user);
 
-                _logger.LogInformation($"Updating user. UserID:{userId}");
+                Logger.Information($"Updating user. UserID:{userId}");
                 await _repository.Update(user);
 
                 AddETag(user.RowVersion);
 
-                return Ok(_mapper.Map<UserModel>(user));
+                return Ok(Mapper.Map<UserModel>(user));
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occured whilst trying to update User.");
+                Logger.Error(ex, "An error occured whilst trying to update User.");
             }
             return BadRequest("Could not update User");
         }
@@ -151,14 +149,14 @@ namespace AquariumAPI.Controllers
                 var user = await _repository.Get(userId);
                 if (user == null) return NotFound();
 
-                _logger.LogInformation($"Deleting user. UserID:{userId}, Username: {User.Identity.Name}");
+                Logger.Information($"Deleting user. UserID:{userId}, Username: {User.Identity.Name}");
                 await _repository.Delete(user.Id);
 
                 return Ok();
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occured whilst trying to delete User.");
+                Logger.Error(ex, "An error occured whilst trying to delete User.");
             }
             return BadRequest("Could not delete User");
         }
@@ -178,17 +176,17 @@ namespace AquariumAPI.Controllers
 
                 if (user.Password != oldPassword)
                 {
-                    _logger.LogInformation($"Attempting to update user password. UserID:{userId}. Password Don't match.");
+                    Logger.Information($"Attempting to update user password. UserID:{userId}. Password Don't match.");
                     return BadRequest("Current passwords don't match");
                 }
 
                 if (user.Password == newPassword)
                 {
-                    _logger.LogInformation($"Attempting to update user password. UserID:{userId}. New password is the same as the current.");
+                    Logger.Information($"Attempting to update user password. UserID:{userId}. New password is the same as the current.");
                     return BadRequest("New password is the same as the current");
                 }
 
-                _logger.LogInformation($"Updating user password. UserID:{userId}");
+                Logger.Information($"Updating user password. UserID:{userId}");
 
                 user.Password = newPassword;
                 await AddPassword(user);
@@ -197,7 +195,7 @@ namespace AquariumAPI.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occured whilst trying to change Password.");
+                Logger.Error(ex, "An error occured whilst trying to change Password.");
             }
             return BadRequest("Could not change Password");
         }
