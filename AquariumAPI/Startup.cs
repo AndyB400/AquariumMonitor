@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using AquariumAPI.Controllers;
 using AquariumMonitor.BusinessLogic;
 using AquariumMonitor.BusinessLogic.Interfaces;
 using AquariumMonitor.DAL;
@@ -17,6 +18,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Pwned;
 using AutoMapper;
+using BusinessLogic.Adapters;
+using BusinessLogic.Interfaces;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace AquariumAPI
@@ -101,6 +104,7 @@ namespace AquariumAPI
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<IValidationManager, ValidationManager>();
             services.AddScoped<IHaveIBeenPwnedRestClient, HaveIBeenPwnedRestClient>();
+            services.AddScoped<ILoggerAdapter<BaseController>, LoggerAdapter<BaseController>>();
 
             // Repositories
             services.AddScoped<IAquariumRepository, AquariumRepository>();
