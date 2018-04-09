@@ -9,10 +9,12 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using BusinessLogic.Interfaces;
+using Microsoft.Net.Http.Headers;
 using Xunit;
 
 namespace AquariumAPI.Tests
@@ -46,16 +48,22 @@ namespace AquariumAPI.Tests
         private void SetupController()
         {
             var claimsPrincipal = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
-             {
-                    new Claim(ClaimTypes.NameIdentifier, "1")
-             }));
+            {
+                new Claim(ClaimTypes.NameIdentifier, "1")
+            }));
 
-            _controller = new AquariumController(_mockAquariumRepository.Object, _mockLogger.Object, _mockMapper.Object,
-                _mockUnitManager.Object, _mockAquariumTypeManager.Object)
+            var context = new DefaultHttpContext {User = claimsPrincipal};
+            context.Request.Headers[HeaderNames.IfMatch] = "Row-Version";
+
+            _controller = new AquariumController(_mockAquariumRepository.Object, 
+                _mockLogger.Object, 
+                _mockMapper.Object,
+                _mockUnitManager.Object, 
+                _mockAquariumTypeManager.Object)
             {
                 ControllerContext = new ControllerContext
                 {
-                    HttpContext = new DefaultHttpContext {User = claimsPrincipal}
+                    HttpContext = context
                 },
                 Url = _mockUrlHelper.Object
             };
@@ -360,6 +368,32 @@ namespace AquariumAPI.Tests
 
         [Fact]
         [Trait("Category", "Aquarium Controller Tests")]
+        public async Task Put_invalid_etag_returns_precondition_failed()
+        {
+            //Arrange
+            var model = new AquariumModel();
+            _mockMapper.Setup(am => am.Map(It.IsAny<AquariumModel>(), It.IsAny<Aquarium>())).Verifiable();
+
+            var existingAquarium = new Aquarium
+            {
+                RowVersion = Encoding.ASCII.GetBytes("A Different RowVersion")
+            };
+            _mockAquariumRepository.Setup(ur => ur.Get(1, 1)).ReturnsAsync(existingAquarium).Verifiable();
+
+            SetupController();
+
+            //Act
+            var result = await _controller.Put(1, model);
+
+            //Assert
+            Assert.Equal(typeof(StatusCodeResult), result.GetType());
+
+            var statusCodeResult = (StatusCodeResult)result;
+            Assert.Equal((int)HttpStatusCode.PreconditionFailed, statusCodeResult.StatusCode);
+        }
+
+        [Fact]
+        [Trait("Category", "Aquarium Controller Tests")]
         public async Task Delete_returns_ok()
         {
             //Arrange
@@ -426,6 +460,32 @@ namespace AquariumAPI.Tests
             _mockAquariumRepository.Verify(r => r.Get(1, 1), Times.Once);
             _mockAquariumRepository.Verify(r => r.Delete(1), Times.Once);
             _mockLogger.Verify(l => l.Error(It.IsAny<Exception>(), "An error occured whilst trying to delete Aquarium. AquariumId:1"), Times.Once);
+        }
+
+        [Fact]
+        [Trait("Category", "Aquarium Controller Tests")]
+        public async Task Delete_invalid_etag_returns_precondition_failed()
+        {
+            //Arrange
+            var model = new AquariumModel();
+            _mockMapper.Setup(am => am.Map(It.IsAny<AquariumModel>(), It.IsAny<Aquarium>())).Verifiable();
+
+            var existingAquarium = new Aquarium
+            {
+                RowVersion = Encoding.ASCII.GetBytes("A Different RowVersion")
+            };
+            _mockAquariumRepository.Setup(ur => ur.Get(1, 1)).ReturnsAsync(existingAquarium).Verifiable();
+
+            SetupController();
+
+            //Act
+            var result = await _controller.Delete(1);
+
+            //Assert
+            Assert.Equal(typeof(StatusCodeResult), result.GetType());
+
+            var statusCodeResult = (StatusCodeResult)result;
+            Assert.Equal((int)HttpStatusCode.PreconditionFailed, statusCodeResult.StatusCode);
         }
     }
 }
