@@ -1,6 +1,7 @@
 ﻿using AquariumAPI.Controllers;
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Net;
 using Microsoft.Extensions.Configuration;
 using Xunit;
 using Moq;
@@ -332,6 +333,32 @@ namespace AquariumAPI.Tests
 
         [Fact]
         [Trait("Category", "User Controller Tests")]
+        public async Task Put_invalid_etag_returns_precondition_failed()
+        {
+            //Arrange
+            var model = new UserModel();
+            _mockMapper.Setup(am => am.Map(It.IsAny<UserModel>(), It.IsAny<User>())).Verifiable();
+
+            var existingUser = new User
+            {
+                RowVersion = Encoding.ASCII.GetBytes("A Different RowVersion")
+            };
+            _mockUserRepository.Setup(ur => ur.Get(1)).ReturnsAsync(existingUser).Verifiable();
+
+            SetupController();
+
+            //Act
+            var result = await _controller.Put(1, model);
+
+            //Assert
+            Assert.Equal(typeof(StatusCodeResult), result.GetType());
+
+            var statusCodeResult = (StatusCodeResult)result;
+            Assert.Equal((int)HttpStatusCode.PreconditionFailed, statusCodeResult.StatusCode);
+        }
+
+        [Fact]
+        [Trait("Category", "User Controller Tests")]
         public async Task Delete_returns_ok()
         {
             //Arrange
@@ -373,6 +400,31 @@ namespace AquariumAPI.Tests
             Assert.Equal(404, notFoundResult.StatusCode);
 
             _mockUserRepository.Verify(r => r.Get(2), Times.Once);
+        }
+
+        [Fact]
+        [Trait("Category", "User Controller Tests")]
+        public async Task Delete_invalid_etag_returns_precondition_failed()
+        {
+            //Arrange
+            _mockMapper.Setup(am => am.Map(It.IsAny<UserModel>(), It.IsAny<User>())).Verifiable();
+
+            var existingUser = new User
+            {
+                RowVersion = Encoding.ASCII.GetBytes("A Different RowVersion")
+            };
+            _mockUserRepository.Setup(ur => ur.Get(1)).ReturnsAsync(existingUser).Verifiable();
+
+            SetupController();
+
+            //Act
+            var result = await _controller.Delete(1);
+
+            //Assert
+            Assert.Equal(typeof(StatusCodeResult), result.GetType());
+
+            var statusCodeResult = (StatusCodeResult)result;
+            Assert.Equal((int)HttpStatusCode.PreconditionFailed, statusCodeResult.StatusCode);
         }
     }
 }
