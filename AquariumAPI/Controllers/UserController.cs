@@ -57,6 +57,8 @@ namespace AquariumAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody]UserModel model)
         {
+            if (model == null) return BadRequest("User cannot be null.");
+
             try
             {
                 var user = Mapper.Map<User>(model);
