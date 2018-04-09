@@ -160,6 +160,25 @@ namespace AquariumAPI.Tests
 
         [Fact]
         [Trait("Category", "User Controller Tests")]
+        public async Task Post_returns_pwned_password()
+        {
+            //Arrange
+            _mockPwnedClient.Setup(c => c.IsPasswordPwned(It.IsAny<string>())).ReturnsAsync(true);
+
+            SetupController();
+
+            //Act
+            var result = await _controller.Post(null);
+
+            //Assert
+            Assert.Equal(typeof(BadRequestObjectResult), result.GetType());
+
+            var badRequestObjectResult = (BadRequestObjectResult)result;
+            Assert.Equal("Pwned Password", badRequestObjectResult.Value.ToString());
+        }
+
+        [Fact]
+        [Trait("Category", "User Controller Tests")]
         public async Task Post_no_password_returns_bad_request()
         {
             //Arrange
@@ -177,7 +196,6 @@ namespace AquariumAPI.Tests
             Assert.Equal(typeof(BadRequestObjectResult), result.GetType());
 
             var badRequestObjectResult = (BadRequestObjectResult)result;
-            Assert.Equal(400, badRequestObjectResult.StatusCode);
             Assert.Equal("Password cannot be null", badRequestObjectResult.Value.ToString());
         }
 
