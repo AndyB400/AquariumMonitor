@@ -467,7 +467,6 @@ namespace AquariumAPI.Tests
         public async Task Delete_invalid_etag_returns_precondition_failed()
         {
             //Arrange
-            var model = new AquariumModel();
             _mockMapper.Setup(am => am.Map(It.IsAny<AquariumModel>(), It.IsAny<Aquarium>())).Verifiable();
 
             var existingAquarium = new Aquarium
