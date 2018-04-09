@@ -146,10 +146,11 @@ namespace AquariumAPI.Tests
         public async Task Post_returns_UnprocessableEntity()
         {
             //Arrange
+            var model = new UserModel();
             SetupController();
 
             //Act
-            var result = await _controller.Post(null);
+            var result = await _controller.Post(model);
 
             //Assert
             Assert.Equal(typeof(StatusCodeResult), result.GetType());
@@ -163,12 +164,20 @@ namespace AquariumAPI.Tests
         public async Task Post_returns_pwned_password()
         {
             //Arrange
+            var model = new UserModel();
             _mockPwnedClient.Setup(c => c.IsPasswordPwned(It.IsAny<string>())).ReturnsAsync(true);
+
+            var user = new User
+            {
+                FirstName = "andy",
+                Password = "abc123"
+            };
+            _mockMapper.Setup(am => am.Map<User>(It.IsAny<UserModel>())).Returns(user);
 
             SetupController();
 
             //Act
-            var result = await _controller.Post(null);
+            var result = await _controller.Post(model);
 
             //Assert
             Assert.Equal(typeof(BadRequestObjectResult), result.GetType());
@@ -182,6 +191,8 @@ namespace AquariumAPI.Tests
         public async Task Post_no_password_returns_bad_request()
         {
             //Arrange
+            var model = new UserModel();
+
             var userNoPassword = new User
             {
                 FirstName = "andy"
@@ -190,7 +201,7 @@ namespace AquariumAPI.Tests
             SetupController();
 
             //Act
-            var result = await _controller.Post(null);
+            var result = await _controller.Post(model);
 
             //Assert
             Assert.Equal(typeof(BadRequestObjectResult), result.GetType());
@@ -204,6 +215,7 @@ namespace AquariumAPI.Tests
         public async Task Post_user_already_exists_returns_bad_request()
         {
             //Arrange
+            var model = new UserModel();
             var user = new User
             {
                 Password = "Password"
@@ -217,7 +229,7 @@ namespace AquariumAPI.Tests
             SetupController();
 
             //Act
-            var result = await _controller.Post(null);
+            var result = await _controller.Post(model);
 
             //Assert
             Assert.Equal(typeof(BadRequestObjectResult), result.GetType());
@@ -255,7 +267,7 @@ namespace AquariumAPI.Tests
             SetupController();
 
             //Act
-            var result = await _controller.Post(null);
+            var result = await _controller.Post(model);
 
             //Assert
             Assert.Equal(typeof(CreatedResult), result.GetType());
