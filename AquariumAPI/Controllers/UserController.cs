@@ -2,8 +2,6 @@
 using AquariumMonitor.Models.APIModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 using AquariumMonitor.Models;
 using AquariumAPI.Filters;
 using AquariumMonitor.DAL.Interfaces;
@@ -12,7 +10,6 @@ using AutoMapper;
 using AquariumMonitor.BusinessLogic.Interfaces;
 using BusinessLogic.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Net.Http.Headers;
 using Pwned;
 
 namespace AquariumAPI.Controllers

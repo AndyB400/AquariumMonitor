@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using AutoMapper;
 using AquariumMonitor.DAL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using AquariumMonitor.APIModels;
 using AquariumMonitor.Models;
 using AquariumAPI.Filters;
