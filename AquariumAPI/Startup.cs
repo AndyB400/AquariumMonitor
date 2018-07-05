@@ -55,39 +55,45 @@ namespace AquariumAPI
                     };
                 });
 
-            services.AddAuthorization(cfg =>
-            {
-                cfg.AddPolicy("Admin", p => p.RequireClaim("Admin", "True"));
-            });
+            services.AddAuthorization(cfg => { cfg.AddPolicy("Admin", p => p.RequireClaim("Admin", "True")); });
 
             services.AddCors(cfg =>
             {
                 cfg.AddPolicy(Configuration[Constants.CorsPolicyName], bldr =>
                 {
                     bldr.AllowAnyHeader()
-                    .AllowAnyMethod()
-                    .WithOrigins(Configuration[Constants.CorsOrigins]);
+                        .AllowAnyMethod()
+                        .WithOrigins(Configuration[Constants.CorsOrigins]);
                 });
+            });
+
+            services.Configure<CookiePolicyOptions>(options =>
+            {
+                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
+                options.CheckConsentNeeded = context => true;
+                options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
             // Add authenticated policy so it can be globally added to all controllers
             var authenticatedPolicy = new AuthorizationPolicyBuilder()
-                            .RequireAuthenticatedUser()
-                            .Build();
+                .RequireAuthenticatedUser()
+                .Build();
 
             services.AddMvc(opt =>
-            {
-                if (!_env.IsProduction())
                 {
-                    opt.SslPort = 44308;
-                }
-                opt.Filters.Add(new RequireHttpsAttribute());
-                opt.Filters.Add(new AuthorizeFilter(authenticatedPolicy));
-            })
+                    if (!_env.IsProduction())
+                    {
+                        opt.SslPort = 44308;
+                    }
+
+                    opt.Filters.Add(new RequireHttpsAttribute());
+                    opt.Filters.Add(new AuthorizeFilter(authenticatedPolicy));
+                })
                 .AddJsonOptions(opt =>
                 {
                     opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
-                });
+                })
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1); 
 
             services.AddApiVersioning(cfg =>
             {
@@ -98,7 +104,8 @@ namespace AquariumAPI
             });
 
             // Add application services.
-            services.AddScoped<IConnectionFactory>(s => new ConnectionFactory(Configuration.GetConnectionString(Constants.DBConnectionName)));
+            services.AddScoped<IConnectionFactory>(s =>
+                new ConnectionFactory(Configuration.GetConnectionString(Constants.DBConnectionName)));
 
             services.AddAutoMapper();
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -132,6 +139,14 @@ namespace AquariumAPI
             {
                 app.UseDeveloperExceptionPage();
             }
+            else
+            {
+                app.UseExceptionHandler("/Error");
+                app.UseHsts();
+            }
+
+            app.UseHttpsRedirection();
+            app.UseCookiePolicy();
 
             app.UseCors(Configuration[Constants.CorsPolicyName]);
             app.UseMvc();

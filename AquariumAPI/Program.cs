@@ -34,7 +34,7 @@ namespace AquariumAPI
             try
             {
                 Log.Information("Starting web host");
-                BuildWebHost(args).Run();
+                CreateWebHostBuilder(args).Build().Run();
                 return 0;
             }
             catch (Exception ex)
@@ -48,10 +48,9 @@ namespace AquariumAPI
             }
         }
 
-        public static IWebHost BuildWebHost(string[] args) =>
+        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
-                .UseSerilog()
-                .Build();
+                .UseSerilog();
     }
 }
