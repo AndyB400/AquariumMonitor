@@ -1,5 +1,5 @@
 ﻿using System;
-using AquariumMonitor.APIModels;
+using AquariumMonitor.Models.ViewModels;
 using Xunit;
 
 namespace Models.Tests

@@ -1,6 +1,6 @@
-﻿namespace AquariumMonitor.APIModels
+﻿namespace AquariumMonitor.Models.ViewModels
 {
-    public interface IAPIModel
+    public interface IViewModel
     {
     }
 }

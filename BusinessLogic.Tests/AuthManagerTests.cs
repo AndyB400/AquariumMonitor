@@ -78,7 +78,7 @@ namespace BusinessLogic.Tests
             // Act
             var token = authManager.CreateToken(claims, 15, creds);
 
-     
+
         }
     }
 }

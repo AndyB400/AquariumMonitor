@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Linq;
 using AquariumMonitor.Models.Validation;
-using AquariumMonitor.APIModels;
+using AquariumMonitor.Models.ViewModels;
 using Xunit;
 
 namespace Models.Tests
 {
     public abstract class TestBase
     {
-        protected IAPIModel item;
+        protected IViewModel item;
 
         protected void CheckResult(object objectToValidate, bool isValid, string errorMessage)
         {
