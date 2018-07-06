@@ -20,7 +20,7 @@ namespace AquariumMonitor.DAL
                                             VALUES (@userId, @PasswordHashAndSalt, GETDATE())";
 
         public PasswordRepository(IConnectionFactory connectionFactory,
-            ILogger<PasswordRepository> logger) : base(connectionFactory, logger)
+            ILogger<UserRepository> logger) : base(connectionFactory, logger)
         {
 
         }
