@@ -17,8 +17,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AquariumMonitor.Pwned", "Pw
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AquariumMonitor.BusinessLogic.Tests", "BusinessLogic.Tests\AquariumMonitor.BusinessLogic.Tests.csproj", "{890CA5C5-2A7D-4261-AD5D-E32E7185B36F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AquariumMonitor.Tests", "AquariumMonitorTests\AquariumMonitor.Tests.csproj", "{4EAB8FC2-E483-4D7B-96DA-2517C826603B}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AquariumMonitor.API", "AquariumMonitorAPI\AquariumMonitor.API.csproj", "{A4E59B50-93B3-4775-83C8-CBB5B72F95FE}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AquariumMonitor.API.Tests", "AquariumMonitor.API.Tests\AquariumMonitor.API.Tests.csproj", "{7E9C1232-33DE-4DEF-B88E-12BE329B6870}"
@@ -57,10 +55,6 @@ Global
 		{890CA5C5-2A7D-4261-AD5D-E32E7185B36F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{890CA5C5-2A7D-4261-AD5D-E32E7185B36F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{890CA5C5-2A7D-4261-AD5D-E32E7185B36F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4EAB8FC2-E483-4D7B-96DA-2517C826603B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4EAB8FC2-E483-4D7B-96DA-2517C826603B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4EAB8FC2-E483-4D7B-96DA-2517C826603B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4EAB8FC2-E483-4D7B-96DA-2517C826603B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A4E59B50-93B3-4775-83C8-CBB5B72F95FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A4E59B50-93B3-4775-83C8-CBB5B72F95FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A4E59B50-93B3-4775-83C8-CBB5B72F95FE}.Release|Any CPU.ActiveCfg = Release|Any CPU

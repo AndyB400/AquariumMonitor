@@ -146,18 +146,11 @@ namespace AquariumMonitor.API
             }
             else
             {
-<<<<<<< HEAD:AquariumAPI/Startup.cs
                 app.UseExceptionHandler("/Error");
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
             app.UseCookiePolicy();
-=======
-                app.UseHsts();
-            }
->>>>>>> 4d1afc4b70131d0faf5c0e58d4e0b85fea1a1a67:AquariumMonitorAPI/Startup.cs
-
             app.UseCors(Configuration[Constants.CorsPolicyName]);
             app.UseHttpsRedirection();
             app.UseMvc();
